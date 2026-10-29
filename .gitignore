@@ -1,4 +1,3 @@
-node_modules/
-dist/
-.astro/
-.env
+# Dados (contas, posts, sessões) ficam fora do repositório: veja o .gitignore da raiz.
+.DS_Store
+Thumbs.db

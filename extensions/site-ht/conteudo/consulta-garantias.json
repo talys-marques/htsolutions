@@ -1,0 +1,9 @@
+{
+    "titulo": "Consulta de garantia",
+    "slug": "consulta-garantias",
+    "descricao": "Consulte a garantia do seu equipamento HT Solutions pelo número de série.",
+    "campos": {
+        "texto": "Digite o número de série do equipamento para ver a situação da garantia.",
+        "suporte_titulo": "Precisa abrir um chamado?"
+    }
+}

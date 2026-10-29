@@ -1,0 +1,219 @@
+{
+    "titulo": "Topo, rodapé e contatos",
+    "slug": "site-geral",
+    "status": "draft",
+    "descricao": "",
+    "campos": {
+        "menu": [
+            {
+                "titulo": "Soluções",
+                "link": "/servicos/",
+                "submenu": [
+                    {
+                        "titulo": "Soluções para Educação",
+                        "link": "/educacao/"
+                    },
+                    {
+                        "titulo": "Google para Empresas",
+                        "link": "/googleparaempresas/"
+                    },
+                    {
+                        "titulo": "HP Inc",
+                        "link": "/hp/"
+                    }
+                ]
+            },
+            {
+                "titulo": "Serviços",
+                "link": "/servicos/#servicos",
+                "submenu": []
+            },
+            {
+                "titulo": "Atas",
+                "link": "/atas/",
+                "submenu": [
+                    {
+                        "titulo": "Itens Disponíveis",
+                        "link": "https://atas.htsolutions.com.br/a/atas/atas/"
+                    }
+                ]
+            },
+            {
+                "titulo": "Loja Online",
+                "link": "https://produtos.htsolutions.com.br/p/produtos/",
+                "submenu": []
+            },
+            {
+                "titulo": "Blog",
+                "link": "/blog/",
+                "submenu": [
+                    {
+                        "titulo": "Cases",
+                        "link": "/category/cases/"
+                    }
+                ]
+            },
+            {
+                "titulo": "Quem somos",
+                "link": "/quem-somos/",
+                "submenu": []
+            },
+            {
+                "titulo": "Garantias",
+                "link": "/consulta-garantias/",
+                "submenu": []
+            }
+        ],
+        "contato": {
+            "titulo": "Vamos conversar sobre o seu projeto?",
+            "texto": "Conte o que a sua empresa precisa. Um especialista da HT Solutions responde em breve.",
+            "telefone": "(51) 4020 1585",
+            "email": "evendas@htsolutions.com.br",
+            "horario": "Atendimento corporativo de segunda a quinta das 7h50 às 18h. Na sexta, das 7h50 às 17h.",
+            "endereco": "Rodovia BR 116, 7070 · CEP 93950-000 · Dois Irmãos – RS"
+        },
+        "suporte": {
+            "telefone": "0800 025 8855",
+            "email": "suporte@htsolutions.com.br",
+            "horario": "Atendimento técnico · segunda a sexta, das 8h às 18h"
+        },
+        "redes": {
+            "facebook": "https://facebook.com/htsolutionsoficial",
+            "linkedin": "https://linkedin.com/company/htsolutions",
+            "instagram": "https://instagram.com/htsolutionsbr"
+        },
+        "rodape": {
+            "texto": "Infraestrutura de TI, soluções Google e computação pessoal para empresas, órgãos públicos e instituições de ensino.",
+            "institucional": [
+                {
+                    "titulo": "Quem somos",
+                    "link": "/quem-somos/"
+                },
+                {
+                    "titulo": "Serviços",
+                    "link": "/servicos/#servicos"
+                },
+                {
+                    "titulo": "Atas",
+                    "link": "/atas/"
+                },
+                {
+                    "titulo": "Cases",
+                    "link": "/category/cases/"
+                },
+                {
+                    "titulo": "Blog",
+                    "link": "/blog/"
+                }
+            ],
+            "solucoes": [
+                {
+                    "titulo": "Infraestrutura",
+                    "link": "/servicos/#enterprise"
+                },
+                {
+                    "titulo": "Redes",
+                    "link": "/servicos/#servicos"
+                },
+                {
+                    "titulo": "Computação pessoal",
+                    "link": "/servicos/#client"
+                }
+            ],
+            "links": [
+                {
+                    "titulo": "Política de Privacidade",
+                    "link": "/politica-de-privacidade/"
+                },
+                {
+                    "titulo": "Trabalhe Conosco",
+                    "link": "https://htsolutions.gupy.io/"
+                }
+            ]
+        },
+        "newsletter": {
+            "titulo": "Newsletter",
+            "texto": "Fique por dentro de todas as novidades."
+        },
+        "parceiros": [
+            {
+                "nome": "AMD",
+                "logo": "/uploads/site/thumbnail-logo-92af596320-52651d4c6d.png",
+                "texto": "A AMD possui processadores de alto desempenho, proporcionando produtos e serviços com qualidade e performance adequados para os negócios.",
+                "link": "/servicos/"
+            },
+            {
+                "nome": "Dell",
+                "logo": "/uploads/site/group-211-28b996f651-0254b7fe47.png",
+                "texto": "Abrange uma grande variedade de produtos e serviços tecnológicos como infraestrutura e soluções, com desks, storages e notebooks.",
+                "link": "/servicos/"
+            },
+            {
+                "nome": "Lenovo",
+                "logo": "/uploads/site/group-212-8cd11ce114-6e06ee831e.png",
+                "texto": "Contamos com um portfólio focado em client, com monitores, desks e notebooks.",
+                "link": "/servicos/"
+            },
+            {
+                "nome": "Samsung",
+                "logo": "/uploads/site/group-214-879e5f59ba-be2742a49d.png",
+                "texto": "Marca reconhecida mundialmente, apresentamos em nosso portfólio Chromebooks ideais para a utilização das soluções Google, além de tecnologia avançada.",
+                "link": "/servicos/"
+            },
+            {
+                "nome": "Google",
+                "logo": "/uploads/site/group-215-80702a2b94-c07b22017c.png",
+                "texto": "Oferecemos as soluções Google For Education e Google Enterprise, líderes quando o assunto é gerenciamento e trabalho colaborativo.",
+                "link": "/educacao/"
+            },
+            {
+                "nome": "Veeam",
+                "logo": "/uploads/site/group-219-750b392098-c70f339af6.png",
+                "texto": "Tecnologia da informação para simplificar backups.",
+                "link": "/servicos/#servicos"
+            },
+            {
+                "nome": "HP",
+                "logo": "/uploads/site/group-217-91753a128c-e32da342d8.png",
+                "texto": "Um dos maiores fabricantes de workstations, desktops, notebooks e monitores que oferece portfólio de produtos e serviços de sistemas pessoais, além de estrutura para data center.",
+                "link": "/servicos/"
+            },
+            {
+                "nome": "Intel",
+                "logo": "/uploads/site/group-213-22c3d1ef7c-76d2d5409c.png",
+                "texto": "Um dos processadores mais conhecido do mercado, aliado às maiores marcas mundiais de tecnologia, proporcionando velocidade e segurança.",
+                "link": "/servicos/"
+            },
+            {
+                "nome": "Poly",
+                "logo": "/uploads/site/group-216-314eb9ee0b-c26074eed9.png",
+                "texto": "Um portfólio repleto de soluções para vídeo conferência, headsets e telefonia, ideias para empresas e instituições de ensino.",
+                "link": "/servicos/"
+            },
+            {
+                "nome": "HPE",
+                "logo": "/uploads/site/design-sem-nome-2025-08-25-t104352-784-d6702f7ac0.png",
+                "texto": "Oferece soluções e serviços de transformação tecnológica para a sua empresa - mobilidade, Greenlake, IoT e mais.",
+                "link": "/servicos/#servicos"
+            },
+            {
+                "nome": "HPE Aruba Networking",
+                "logo": "/uploads/site/hpe-aruba-networking-graphik-pos-orange-rgb-13f078ad01.png",
+                "texto": "Líder em conectividade para melhor desempenho e gestão com segurança.",
+                "link": "/servicos/#servicos"
+            },
+            {
+                "nome": "Intelbras",
+                "logo": "/uploads/site/selo-parceiro-credenciado-rgb-10x5cm-cv-verde-fundo-branco-7b89312102.png",
+                "texto": "Soluções completas: câmeras, rede e automação para uma empresa inteligente.",
+                "link": "/servicos/#servicos"
+            },
+            {
+                "nome": "HPE Juniper Networking",
+                "logo": "/uploads/site/12a9cd4d-1f7a-487a-81b6-5b3d66ec98eb-ca4c9f1d4a.jpg",
+                "texto": "Líder em redes seguras movidas a IA, oferecendo soluções de infraestrutura, software Junos e segurança para data centers e provedores de nuvem.",
+                "link": "/servicos/#servicos"
+            }
+        ]
+    }
+}

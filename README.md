@@ -1,112 +1,255 @@
-# HT Solutions
+# Blog em PHP sem banco de dados
 
-Site institucional estático da [HT Solutions](https://htsolutions.com.br), uma empresa do Grupo Herval, feito em [Astro](https://astro.build). Substitui o site em Angular com Strapi: não há banco de dados nem painel, cada alteração no código gera o site de novo.
+Sistema de blog simples para sair do WordPress. PHP 8.1+, **sem banco de dados**
+(tudo em arquivos JSON), **sem dependências** (nada de Composer, npm, plugins ou
+build) e sem atualizações automáticas que quebram coisas.
 
-O blog não está aqui: é o [blog-system](../blog/README.md) (PHP, sem banco), instalado na pasta `/blog/` do mesmo domínio, com painel em `/blog/admin`.
+- Visitantes só leem: não há comentários nem cadastro público.
+- Um **administrador único** controla tudo. Opcionalmente, ele cria contas de
+  **autores**, que cuidam de todo o conteúdo (posts, páginas, mídia e SEO de
+  categorias e tags), mas não da parte técnica (usuários, configurações, SEO
+  geral, redirecionamentos e backup).
+- Funcionalidades novas são feitas sob medida, editando o código (vibe code).
+  Veja o [CLAUDE.md](CLAUDE.md).
 
-Páginas: início, quem somos, serviços, atas, Google para Empresas, Google for Education, HP, Certigov, consulta de garantias, política de privacidade e 404. Os endereços são os mesmos do site antigo (`/quem-somos`, `/servicos`, `/educacao`...); o Apache acrescenta a barra final.
+## Recursos
 
-## Rodar no computador
-
-Requer Node.js 22.23 ou mais novo.
-
-```bash
-npm install
-npm run dev        # site em http://localhost:4321, atualiza ao salvar
-npm run build      # gera o site final em dist/
-npm run preview    # serve o dist/ para conferir antes de publicar
-npm run verificar  # depois do build: procura links internos quebrados (ignora /blog/)
-```
-
-No `npm run dev` o blog não está em `/blog/`, então os blocos "Cases" e "Últimas notícias" ficam só com o botão. Para vê-los, rode o blog (`../blog/run.bat`) e inicie o site com o endereço dele:
-
-```bash
-PUBLIC_BLOG_URL=http://localhost:8080 npm run dev
-```
-
-## Onde fica cada coisa
-
-| Arquivo | O que tem |
+| Área | O que tem |
 |---|---|
-| `src/config.mjs` | Contatos, redes sociais, menu do topo, links do rodapé, endereços externos (loja, atas, vagas, chamado técnico) e os formulários da Emarsys |
-| `src/data/*.json` | Textos e imagens das páginas, trazidos do Strapi: `home`, `servicos`, `quem-somos`, `atas`, `googleparaempresas`, `educacao`, `parceiros` e `politica-de-privacidade`. Os campos `imagem`, `logo`, `foto` etc. são nomes de arquivo em `src/assets/strapi/`, sem extensão. Textos com HTML (`<p>`, `<strong>`, `<br>`) são exibidos como HTML |
-| `src/assets/strapi/` | Imagens do conteúdo. São convertidas para WebP/AVIF em vários tamanhos no build |
-| `src/assets/img/` | Logos (HT e Herval) e as imagens fixas do Certigov |
-| `src/pages/` | Uma página por arquivo. Certigov, garantias e HP têm os textos no próprio arquivo (no site antigo também estavam no código) |
-| `public/arquivos/` | E-book do Chrome Enterprise (PDF) |
-| `public/assets/db_943hf3.bin` | Base da consulta de garantias (veja abaixo) |
-| `public/.htaccess` | 404, redirecionamentos e cache para o Apache |
+| Conteúdo | Posts e páginas, rascunho, agendamento (data futura), categorias, tags, imagem de capa, resumo, lixeira e **revisões** (últimas 20 versões de cada post) |
+| Editor | Editor visual próprio (sem bibliotecas): títulos, negrito, listas, citação, código, links, imagens (arrastar, colar ou escolher da biblioteca), vídeos do YouTube/Vimeo, legenda e texto alternativo, modo HTML, `Ctrl+S`, limpeza do que é colado do Word/Google Docs e **cópia local de segurança** do texto enquanto você escreve |
+| Mídia | Biblioteca com envio múltiplo e redução automática de imagens grandes |
+| SEO | URLs iguais às do WordPress (`/slug/`, `/category/x/`, `/tag/x/`, `/?s=`, `/?p=123`), título e descrição por post, Open Graph, JSON-LD, sitemap.xml, robots.txt, **redirecionamentos 301** (automáticos quando o endereço de um post muda) |
+| Migração | Importador do WordPress **opcional**, como extensão separada (veja [Extensões](#extensões)), pela tela ou pelo terminal, que mantém endereços, datas, categorias, tags, capas e descrições do Yoast/Rank Math |
+| Operação | Backup para download, exportação no formato do WordPress, códigos de analytics no `<head>`, tema com modo escuro automático, painel responsivo |
+| Segurança | Senhas com `password_hash`, CSRF em todo formulário, limite de tentativas de login, HTML dos autores filtrado, uploads sem execução de PHP, dados fora da pasta pública, nenhum cookie para visitantes |
 
-### Visual
+## Dá para fazer sem banco de dados? Sim, e com folga para um blog
 
-Fonte Plus Jakarta Sans (`@fontsource-variable/plus-jakarta-sans`), azul da marca `#2673f0` com degradê para ciano, e fundos escuros (`--noite`) no topo, nos cabeçalhos das páginas e no rodapé. Cores, espaços e componentes ficam em `src/styles/global.css`. O blog repete o topo, o rodapé e a fonte em `../blog/public/assets/ht/ht.css`: se mudar um, mude o outro.
+Um blog lê muito e grava pouco, com uma pessoa (ou poucas) escrevendo. É o
+cenário ideal para arquivos. Como o sistema evita os problemas clássicos:
 
-A página inicial não tem mais o carrossel do site antigo:
+| Problema | Solução aqui |
+|---|---|
+| Duas gravações ao mesmo tempo | Trava exclusiva (`flock` em `data/.lock`) em toda operação "ler, alterar, gravar" |
+| Arquivo corrompido se o servidor cair no meio | Gravação atômica: escreve num temporário e troca com `rename`, então o arquivo nunca fica pela metade |
+| Listar posts sem abrir milhares de arquivos | `data/index.json` guarda só os metadados de todos os posts e é lido uma vez por página |
+| Busca | `data/search.json` com as palavras de cada post já normalizadas (sem acento, sem repetição) |
+| Índice desatualizado ou apagado | Ele é derivado e se refaz sozinho a partir de `data/posts/` (ou pelo botão "Reconstruir índice") |
+| Erro humano | Revisões de cada post, lixeira e backup com um clique |
 
-- **Abertura**: o título e o texto vêm do primeiro item de `banner` em `home.json`. A última palavra do título ganha o degradê. As três fotos ao lado (projeto de educação, equipe e prêmio) estão em `COLAGEM`, em `src/pages/index.astro`.
-- **Atalhos**: os demais itens de `banner` (produtos, atas, educação, parcerias, quem somos) viram cartões com ícone. O ícone é escolhido pelo link do botão.
-- **Números**: a lista `NUMEROS` em `src/pages/index.astro`, com dados tirados das outras páginas (19 anos, 50 mil Chromebooks, 11 fabricantes).
-- **Soluções**: os três itens de `solucoes.solucao` em grade; o primeiro ocupa o espaço maior.
-- **Parceiros**: só os logos (em cinza, coloridos ao passar o mouse). Os textos de cada parceiro aparecem em Quem somos.
+**Medições** com 3.000 posts de ~800 palavras, num notebook Windows, PHP 8.3
+**sem opcache** (em servidor com opcache fica mais rápido):
 
-### Formulários
+| Operação | Tempo |
+|---|---|
+| Página inicial | ~29 ms |
+| Post individual | ~29 ms |
+| Categoria | ~21 ms |
+| Busca | ~93 ms |
+| Salvar um post | ~115 ms |
+| Importar 3.000 posts | ~10 s |
+| Memória máxima | 66 MB |
 
-Contato e newsletter vão para a Emarsys (`link.htsolutions.com.br`), como no site antigo. Cada página manda para o formulário dela, que define a lista e quem recebe o contato:
+Para comparar: um WordPress sem cache costuma levar de 300 a 800 ms por página.
 
-| Página | Formulário | Campo extra |
-|---|---|---|
-| Início, serviços, quem somos, HP e as demais | 1128 | Empresa |
-| Atas e Certigov | 1193 | Órgão Público |
-| Educação | 1129 | Instituição de Ensino |
-| Google para Empresas | 1194 | Empresa |
-| Newsletter | 1404 | – |
+**Até onde vai:** fica confortável até uns **5 a 10 mil posts**. Acima disso o
+`search.json` passa de algumas dezenas de MB e a busca e o salvamento ficam
+lentos. Nesse ponto, o caminho natural é trocar só a busca por SQLite FTS (que
+também não exige servidor de banco). Também **não serve** para hospedagens sem
+disco persistente (Vercel, Heroku, containers efêmeros), nem para muita gente
+escrevendo ao mesmo tempo ou para comentários. Isso está fora do escopo de
+propósito.
 
-O envio é feito num iframe escondido: o visitante continua na página e vê a mensagem de confirmação. A página usa `formulario="atas"` (ou outro) no `<Base>` para escolher qual aparece no rodapé.
+## Requisitos
 
-### Últimos posts e cases
+- PHP **8.1 ou superior**, com as extensões `json`, `mbstring` e `session`
+  (vêm em qualquer hospedagem)
+- Recomendado: `gd` (redimensiona imagens), `fileinfo` e `zip` (backup em .zip; sem ela o backup sai em .tar.gz). A extensão de importação do WordPress usa `xmlreader`.
+- Apache com `mod_rewrite` (qualquer hospedagem compartilhada/cPanel) **ou** nginx
 
-A home e a página Google para Empresas mostram os últimos posts do blog. Eles são lidos no navegador de `/blog/ultimos.json`, criado pela extensão `../blog/extensions/ultimos-posts/`. Um post novo no blog aparece no site na hora, sem gerar o site de novo.
+## Instalação
 
-### Consulta de garantias
+### Hospedagem compartilhada (cPanel, Hostinger, Locaweb, HostGator...)
 
-`public/assets/db_943hf3.bin` é a lista de equipamentos com garantia, cifrada (AES-GCM, chave por PBKDF2). **Ele não está no repositório** (`.gitignore`), porque o repositório é público: copie o arquivo do site antigo (`https://htsolutions.com.br/assets/db_943hf3.bin`) direto para o servidor. A página baixa o arquivo e decifra no navegador, como no site antigo. **A senha está no código da página, então qualquer pessoa consegue ler a lista inteira**, com nomes de clientes e contratos. Se isso for um problema, a consulta precisa de um servidor (um PHP pequeno no mesmo Apache resolveria). Para atualizar a lista, substitua o `.bin` por um gerado com a mesma senha e o mesmo formato.
+1. Envie **a pasta inteira** para o servidor (ex.: `public_html/`). Pode ser
+   numa subpasta (ex.: `public_html/blog/`, aberto em `seudominio.com.br/blog/`):
+   imagens e links se ajustam sozinhos, e dá para trocar de pasta depois sem
+   mexer em nada.
+2. Se puder, aponte o domínio para a subpasta `public/`. Se não puder, tudo
+   bem: o `.htaccess` da raiz já redireciona internamente para `public/` e
+   bloqueia o resto.
+3. Dê permissão de escrita (775) para `data/` e `public/uploads/`.
+4. Abra `https://seudominio.com.br/admin` e crie a conta de administrador.
+   **Faça isso logo depois de subir os arquivos**, porque o primeiro acesso cria o dono do blog.
+5. Em **Configurações**, preencha o "Endereço do site" (ex.: `https://seudominio.com.br`).
 
-### Conteúdo vindo do Strapi
+Confira que a proteção funciona: `https://seudominio.com.br/data/users.json`
+precisa dar **404**.
 
-`npm run importar` (`scripts/importar-strapi.mjs`) fez a conversão uma única vez, a partir da cópia da API em `../dados/strapi-2026-10-29/`: limpou o HTML, baixou as imagens para `src/assets/strapi/` (reduzidas a 2.400 px) e gravou `src/data/*.json`. **Não rode de novo**: ele sobrescreve os JSON e perde o que foi editado depois. Ajustes feitos à mão depois da importação: nomes das marcas em `parceiros.json` (texto alternativo dos logos), `<o:p>` do Word na política de privacidade e um erro de digitação em `servicos.json`.
+### nginx
 
-## Publicação
+Aponte o `root` para a pasta `public/`:
 
-A apresentação no GitHub Pages está descrita no [README da raiz](../README.md). Para gerar localmente como lá, com o blog rodando em `http://127.0.0.1:8080` e `HT_SITE_BASE=/htsolutions`:
+```nginx
+server {
+    server_name meublog.com.br;
+    root /var/www/blog/public;
+    index index.php;
+    client_max_body_size 64m;
+
+    location / {
+        try_files $uri /index.php?$query_string;
+    }
+    location ~ ^/(uploads|wp-content)/.*\.php$ { deny all; }
+    location ~ \.php$ {
+        include fastcgi_params;
+        fastcgi_param SCRIPT_FILENAME $document_root/index.php;
+        fastcgi_pass unix:/run/php/php8.3-fpm.sock;
+    }
+}
+```
+
+### No seu computador
+
+No Windows, dê dois cliques em `run.bat`: ele sobe o servidor e abre o painel.
+Para usar outra porta, rode `run.bat 8090`. Em qualquer sistema:
 
 ```bash
-SITE_URL=https://talys-marques.github.io BASE_PATH=/htsolutions PUBLIC_APRESENTACAO=1 npm run build
-node scripts/blog-estatico.mjs http://127.0.0.1:8080 dist/blog https://talys-marques.github.io/htsolutions/blog
+php -d upload_max_filesize=64M -d post_max_size=64M -S localhost:8080 -t public public/index.php
 ```
 
-No Git Bash do Windows, coloque `MSYS_NO_PATHCONV=1` antes dos comandos; sem isso ele troca `/htsolutions` por `C:/Program Files/Git/htsolutions`.
+Depois abra http://localhost:8080/admin. Nesse modo os erros aparecem
+detalhados na tela.
 
-O site definitivo precisa de Apache com PHP 8.1+ (por causa do blog). No servidor:
+## Extensões
+
+Recursos opcionais ficam isolados, cada um numa pasta dentro de `extensions/`.
+Você escolhe o que leva junto: **apagar a pasta remove o recurso** (rotas e item
+do menu) e o resto do blog não muda. O núcleo nunca depende de uma extensão.
+
+| Extensão | O que faz |
+|---|---|
+| `extensions/wordpress-import/` | Importa o conteúdo de um WordPress. Detalhes no [README dela](extensions/wordpress-import/README.md) |
+
+Para criar uma extensão nova, veja o [CLAUDE.md](CLAUDE.md#extensões).
+
+## Migrando do WordPress
+
+Precisa da extensão `extensions/wordpress-import/`. Se não vai migrar, apague essa pasta.
+
+1. No WordPress: **Ferramentas → Exportar → Todo o conteúdo** e baixe o `.xml`.
+2. Aqui: **Importar WordPress** e envie o arquivo (até 64 MB, definido em
+   `public/.user.ini`; algumas hospedagens só deixam mudar isso no painel delas).
+   Se for maior, coloque-o por FTP em `data/import/` e escolha na lista, ou
+   rode `php extensions/wordpress-import/cli.php exportacao.xml`.
+3. Traga as imagens, que continuam com o mesmo endereço: na mesma tela, clique em
+   **Baixar imagens do site antigo** (baixa só as que os posts usam, enquanto o
+   site antigo estiver no ar), ou copie a pasta `wp-content/uploads` do WordPress
+   para `public/wp-content/uploads`.
+4. Aponte o domínio para o novo sistema.
+5. Se quiser, apague `extensions/wordpress-import/`: o conteúdo importado, os
+   redirecionamentos e os links antigos `/?p=123` continuam funcionando.
+
+O que acontece na importação:
+
+- Posts e páginas mantêm slug, data, categorias, tags, imagem destacada, resumo
+  e descrição do Yoast/Rank Math. Os links internos viram relativos.
+- Conteúdo do editor clássico ganha parágrafos (como o WordPress faz); blocos
+  do Gutenberg são limpos; `[caption]` vira `<figure>`; links do YouTube/Vimeo viram players.
+- Se o endereço antigo era diferente (ex.: `/2020/05/titulo/`), um
+  redirecionamento 301 é criado. Links `/?p=123` também continuam funcionando.
+- Shortcodes de plugins (`[contact-form-7]`, `[gallery]`...) ficam no texto, e o
+  relatório lista quais apareceram para você ajustar.
+- Pode importar de novo quantas vezes quiser: os mesmos posts são atualizados,
+  sem duplicar.
+- Para manter a autoria de outros autores, crie antes usuários com o mesmo
+  login do WordPress.
+
+## Backup
+
+O blog inteiro são duas pastas:
+
+- `data/`: posts, páginas, usuários, configurações e redirecionamentos (JSON legível)
+- `public/uploads/` (e `public/wp-content/uploads/`, se importou do WordPress): arquivos
+
+Baixe pelo painel (**Backup e ferramentas**) ou copie as pastas por FTP. Para
+restaurar, descompacte por cima. Como são arquivos de texto, também dá para
+versionar `data/posts/` no git.
+
+## Exportar
+
+Em **Backup e ferramentas → Exportar** sai um `.xml` no formato do WordPress
+(o mesmo de **Ferramentas → Exportar** de lá): posts e páginas (com rascunhos e
+agendados), categorias, tags, autores, capas, imagens e título/descrição SEO
+(nos campos do Yoast e do Rank Math). Os ids são mantidos.
+
+- No WordPress: **Ferramentas → Importar → WordPress**, marcando **Baixar e
+  importar arquivos anexos**. As imagens são baixadas deste site, que precisa
+  estar no ar, e os links delas no conteúdo são trocados automaticamente.
+- Outras plataformas que importam do WordPress aceitam o mesmo arquivo.
+- Configurações, menu e senhas ficam de fora (para isso existe o backup).
+
+## Começar do zero
+
+Todo o conteúdo fica em `data/` e `public/uploads/`; o código não muda com o uso.
+No Windows, rode `reset.bat`: ele pede para você digitar **SIM** e então esvazia
+`data/` e `public/uploads/` (mantendo os `.htaccess` de proteção) e apaga
+`public/wp-content/`. Código, tema e extensões continuam intactos. No próximo
+acesso a `/admin` aparece a configuração inicial de novo.
+
+Em outro sistema, faça o mesmo à mão: apague o conteúdo dessas pastas, menos os `.htaccess`.
+
+Para testar sem mexer nos dados de verdade, use uma pasta separada com a
+variável `BLOG_DATA_DIR` (ex.: `set BLOG_DATA_DIR=C:\blog-teste` antes do `run.bat`).
+Os uploads continuam indo para `public/uploads/`.
+
+## Esqueci a senha
+
+Não há "esqueci a senha" por e-mail (é menos uma coisa para dar errado). No servidor:
+
+```bash
+php tools/reset-password.php seu-usuario
+```
+
+O comando também libera o login se ele tiver sido bloqueado por tentativas erradas.
+
+## Estrutura
 
 ```
-public_html/            conteúdo de dist/ (npm run build), incluindo o .htaccess
-public_html/blog/       a pasta ../blog inteira (blog-system)
+config.php            configurações técnicas (pasta de dados, limites de upload)
+app/                  código do sistema
+  App.php             inicialização e despacho
+  Router.php          rotas
+  Storage.php         leitura/gravação de JSON (atômica e com trava)
+  Posts.php           posts, páginas, índice, busca, revisões
+  Auth.php            usuários, login, sessões e permissões
+  Media.php           uploads
+  Redirects.php       redirecionamentos 301
+  Settings.php        configurações do painel
+  Site.php            páginas públicas
+  Admin.php           telas do painel
+  Extensions.php      carrega as extensões de extensions/
+  Html.php            filtro de HTML dos autores
+  Backup.php
+  Export.php          exportação no formato do WordPress (WXR)
+  helpers.php         funções globais (e(), url(), slugify()...)
+  routes/             mapa de URLs → métodos
+  views/admin/        templates do painel
+extensions/           recursos opcionais (apague a pasta para remover)
+  wordpress-import/   importador do WordPress
+theme/                templates do site público (layout, home, post...)
+public/               única pasta acessível pela web
+  index.php           porta de entrada
+  assets/             site.css, admin.css, admin.js
+  uploads/            arquivos enviados
+data/                 conteúdo (criado na primeira execução)
+tools/                scripts de terminal
 ```
 
-Depois de publicar, confira `https://htsolutions.com.br/blog/ultimos.json`: tem que devolver os posts em JSON.
+## Atualizações
 
-## O que mudou em relação ao site antigo
-
-- **Título, descrição e imagem de compartilhamento por página.** No Angular, todas as páginas tinham o mesmo título.
-- **`sitemap-index.xml`, `robots.txt` e 404 de verdade.** Antes, endereços inexistentes respondiam com a página 404 e status 200.
-- **`/campanha-hp`** (promoção de notebook com Windows 10 e "estoque limitado") redireciona para `/hp/`. O formulário dela gravava no Strapi.
-- **`/termos-de-uso`** não foi recriada: estava no ar sem conteúdo.
-- **reCAPTCHA** saiu dos formulários. Ele só bloqueava o botão no navegador; a Emarsys não conferia a resposta.
-- **Envio duplicado do formulário de Educação** para `a.newshtsolutions.com.br/pub/rf` saiu. O lead continua indo para a Emarsys.
-- **Vídeos** "A história da HT" (122 MB) e "Certificações" (90 MB) continuam no Azure (`htsolutions.blob.core.windows.net`): são grandes demais para o repositório. Se o Azure for desligado, suba no YouTube e troque o endereço em `home.json` e `quem-somos.json`.
-- **Logo**: o arquivo do site antigo tem 171 px de largura e fica levemente borrado em telas de alta densidade. Vale pedir a versão em SVG.
-
-## Pendências de conteúdo
-
-- **Política de privacidade**: é um modelo que cita a lei portuguesa de proteção de dados (Lei n.º 67/98), não a LGPD. Precisa de revisão do jurídico.
-- **Página `/termos-de-uso`**: pedir o texto, se for necessária.
+Não existe atualização automática nem dependência externa: o sistema só muda
+quando você muda. O código usa apenas recursos estáveis do PHP 8.1, então
+deve funcionar sem ajustes nas próximas versões do PHP. Antes de trocar a
+versão do PHP na hospedagem, teste localmente com `php -S`.
