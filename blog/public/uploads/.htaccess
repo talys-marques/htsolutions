@@ -1,0 +1,28 @@
+# Arquivos enviados nunca são executados como código
+Options -Indexes -ExecCGI -Includes
+# Também pega nomes como foto.php.jpg (algumas hospedagens executam qualquer ".php." no nome)
+<FilesMatch "\.(php\d?|phtml|pht|phar)(\.|$)|\.(pl|py|cgi|sh|asp|aspx|jsp|shtml)$">
+  <IfModule mod_authz_core.c>
+    Require all denied
+  </IfModule>
+  <IfModule !mod_authz_core.c>
+    Deny from all
+  </IfModule>
+</FilesMatch>
+<IfModule mod_mime.c>
+  RemoveHandler .php .php3 .php4 .php5 .php7 .php8 .phtml .pht .phar
+  RemoveType .php .php3 .php4 .php5 .php7 .php8 .phtml .pht .phar
+</IfModule>
+<IfModule mod_php.c>
+  php_flag engine off
+</IfModule>
+<IfModule mod_php7.c>
+  php_flag engine off
+</IfModule>
+<IfModule mod_headers.c>
+  Header set X-Content-Type-Options "nosniff"
+  # HTML/SVG copiados do WordPress abertos direto não rodam scripts no endereço do blog
+  <FilesMatch "\.(svgz?|html?|xhtml?|xml|xsl|mht|mhtml)$">
+    Header set Content-Security-Policy "default-src 'none'; style-src 'unsafe-inline'; img-src data:; sandbox"
+  </FilesMatch>
+</IfModule>

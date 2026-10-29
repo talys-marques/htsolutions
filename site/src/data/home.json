@@ -1,0 +1,123 @@
+{
+  "banner": [
+    {
+      "titulo": "Tecnologia que performa",
+      "texto": "<p>Da escolha dos equipamentos à gestão completa da sua infraestrutura, garantimos eficiência, segurança e continuidade para o seu negócio.</p>",
+      "imagem": "banner-tecnologia-impulsiona-1-2-fb0c9a5855",
+      "imagem_mobile": "banner-mobile-042f5fea60",
+      "botao": {
+        "texto": "Saiba mais",
+        "link": "/servicos/#servicos"
+      }
+    },
+    {
+      "titulo": "Produtos em estoque",
+      "texto": "<p>Encontre notebooks, desktops, monitores e muito mais, com entrega rápida.</p>",
+      "imagem": "banner-atas-892f084d01",
+      "imagem_mobile": null,
+      "botao": {
+        "texto": "Ver produtos",
+        "link": "https://produtos.htsolutions.com.br/p/produtos/"
+      }
+    },
+    {
+      "titulo": "Atas de Registro de Preço",
+      "texto": "<p>Aquisições mais ágeis, menos burocracia, com preços já definidos e qualidade garantida para sua empresa.</p>",
+      "imagem": "design-sem-nome-14-2f0fc3c91a",
+      "imagem_mobile": null,
+      "botao": {
+        "texto": "Adquira aqui",
+        "link": "https://atas.htsolutions.com.br/a/atas/atas/"
+      }
+    },
+    {
+      "titulo": "Educação",
+      "texto": "<p>Tecnologia que transforma e potencializa o aprendizado.</p>",
+      "imagem": "design-sem-nome-21-d91c4b492f",
+      "imagem_mobile": null,
+      "botao": {
+        "texto": "Conheça as soluções",
+        "link": "/educacao/"
+      }
+    },
+    {
+      "titulo": "Parcerias que aceleram",
+      "texto": "<p>Trabalhamos com as principais marcas tecnológicas do mundo para entregar infraestrutura, performance, segurança e inovação para o seu negócio.</p>",
+      "imagem": "e-muito-mais-4-fc89dd27d8",
+      "imagem_mobile": null,
+      "botao": {
+        "texto": "Saiba mais",
+        "link": "/servicos/"
+      }
+    },
+    {
+      "titulo": "Quem somos",
+      "texto": "<p>Há mais de 19 anos transformando desafios em soluções tecnológicas.</p>",
+      "imagem": "banner-quem-somos-2-717f8a8d63",
+      "imagem_mobile": null,
+      "botao": {
+        "texto": "Conheça nossa história",
+        "link": "/quem-somos/"
+      }
+    }
+  ],
+  "solucoes": {
+    "titulo": "Nossas soluções de TI",
+    "texto": "<p>Ao lado de parceiros como Google, HPE, Dell, Samsung e HP, fornecemos equipamentos, implantamos projetos e gerenciamos ambientes de TI para empresas do setor privado, órgãos públicos e instituições de ensino em todo o Brasil. Atuamos com infraestrutura de TI, cloud, segurança da informação e serviços gerenciados, garantindo desempenho, proteção de dados e continuidade operacional.</p>",
+    "background": "prancheta-1-1-664949f64c-1a48bbc13b",
+    "botao": {
+      "texto": "Acesse Agora",
+      "link": "/servicos/"
+    },
+    "solucao": [
+      {
+        "titulo": "Infraestrutura",
+        "texto": "Ao lado de parceiros como Google, Dell, HP, HPE e Samsung, oferecemos soluções tecnológicas corporativas focadas em inovação e performance.",
+        "link": "/servicos/",
+        "colunas": 8,
+        "imagem": "electronic-devices-empty-data-center-29880ffbe8"
+      },
+      {
+        "titulo": "Client",
+        "texto": "Notebooks, monitores, desktops e workstations das principais marcas como Dell, HP, Samsung e Lenovo.",
+        "link": "/servicos/",
+        "colunas": 4,
+        "imagem": "smiley-woman-talking-phone-coffee-shop-4a3be53236"
+      },
+      {
+        "titulo": "Rede",
+        "texto": "Monitoramento inteligente em tempo real para mais segurança, desempenho e controle da sua TI.",
+        "link": "/servicos/",
+        "colunas": 12,
+        "imagem": "data-center-computer-scientist-using-laptop-protect-servers-from-exploitable-software-61cb"
+      }
+    ]
+  },
+  "quem_somos": {
+    "subtitulo": "Quem somos",
+    "titulo": "Conheça um pouco mais da nossa história",
+    "texto": "<p>A HT Solutions possui mais de 19 anos de história no mercado de tecnologia e integra o Grupo Herval, um dos maiores conglomerados empresariais do Brasil, ao lado de marcas reconhecidas como a iPlace.</p>",
+    "video": "https://htsolutions.blob.core.windows.net/uploads/uploads/HT_A_Historia_4f71724db6.mp4"
+  },
+  "parceiros": {
+    "subtitulo": "Parceiros",
+    "titulo": "Estamos ligados às maiores marcas tecnológicas do mundo.",
+    "texto": "<p>Conheça nossos parceiros:</p>"
+  },
+  "cases": {
+    "subtitulo": "CASES",
+    "titulo": "Veja como podemos levar o seu negócio para o próximo nível",
+    "botao": {
+      "texto": "Veja mais vídeos",
+      "link": "/blog/category/cases/"
+    }
+  },
+  "blog": {
+    "subtitulo": "Blog | HT Solutions",
+    "titulo": "Últimas notícias",
+    "newsletter": {
+      "titulo": "Newsletter",
+      "texto": "<p>Fique por dentro de todas as novidades.</p>"
+    }
+  }
+}

@@ -1,0 +1,12 @@
+.DS_Store
+Thumbs.db
+
+# blog-system: accounts, sessions, logs and caches stay on the server only
+blog/data/*
+!blog/data/.htaccess
+!blog/data/settings.json
+blog/public/thumbs/
+
+# Warranty lookup data: customer names and contracts. Public repository, so the file is
+# copied straight to the server instead (see site/README.md).
+site/public/assets/db_943hf3.bin

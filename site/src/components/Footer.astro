@@ -1,0 +1,82 @@
+---
+import { Image } from 'astro:assets';
+import Icon from './Icon.astro';
+import FormularioContato from './FormularioContato.astro';
+import logo from '../assets/img/logo-branco.png';
+import logoHerval from '../assets/img/logo-herval.png';
+import { CONTATO, REDES, RODAPE } from '../config.mjs';
+import { url, externo } from '../lib/site.mjs';
+
+interface Props {
+  formulario: 'empresa' | 'atas' | 'educacao' | 'enterprise';
+}
+
+const { formulario } = Astro.props;
+const ano = new Date().getFullYear();
+const alvo = (href: string) => (externo(href) ? { target: '_blank', rel: 'noopener' } : {});
+---
+
+<footer class="rodape">
+  <section class="rodape-contato" id="contato" aria-labelledby="contato-titulo">
+    <div class="container rodape-contato-h">
+      <div>
+        <p class="sobretitulo">Contato</p>
+        <h2 id="contato-titulo">Vamos conversar sobre o seu projeto?</h2>
+        <p class="rodape-contato-intro">Conte o que a sua empresa precisa. Um especialista da HT Solutions responde em breve.</p>
+        <ul class="contato-lista">
+          <li><Icon nome="telefone" /> <a href={CONTATO.telefone.link}>{CONTATO.telefone.texto}</a></li>
+          <li><Icon nome="email" /> <a href={`mailto:${CONTATO.email}`}>{CONTATO.email}</a></li>
+          <li><Icon nome="relogio" /> <span>{CONTATO.horario}</span></li>
+          <li><Icon nome="local" /> <span>{CONTATO.endereco}</span></li>
+        </ul>
+      </div>
+      <div class="rodape-formulario">
+        <h3>Entre em contato</h3>
+        <FormularioContato tipo={formulario} />
+      </div>
+    </div>
+  </section>
+
+  <div class="container rodape-links-h">
+    <div class="rodape-marca">
+      <a href={url('/')} aria-label="HT Solutions – página inicial">
+        <Image src={logo} alt="HT Solutions" width={140} densities={[1, 2]} />
+      </a>
+      <p>Infraestrutura de TI, soluções Google e computação pessoal para empresas, órgãos públicos e instituições de ensino.</p>
+      <div class="herval">
+        <Image src={logoHerval} alt="Grupo Herval" width={92} densities={[1, 2]} />
+        <span>Uma empresa do Grupo Herval</span>
+      </div>
+    </div>
+    <nav aria-label="Institucional">
+      <h2 class="rodape-titulo">Institucional</h2>
+      <ul>{RODAPE.menu.map((l) => <li><a href={url(l.href)}>{l.titulo}</a></li>)}</ul>
+    </nav>
+    <nav aria-label="Soluções">
+      <h2 class="rodape-titulo">Soluções</h2>
+      <ul>{RODAPE.solucoes.map((l) => <li><a href={url(l.href)}>{l.titulo}</a></li>)}</ul>
+    </nav>
+    <div>
+      <h2 class="rodape-titulo">Siga a HT</h2>
+      <ul class="redes">
+        {
+          REDES.map((r) => (
+            <li>
+              <a href={r.link} target="_blank" rel="noopener" aria-label={`HT Solutions no ${r.nome}`}>
+                <Icon nome={r.icone} tamanho={18} />
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      <ul>{RODAPE.links.map((l) => <li><a href={url(l.href)} {...alvo(l.href)}>{l.titulo}</a></li>)}</ul>
+    </div>
+  </div>
+
+  <div class="rodape-base">
+    <div class="container">
+      <span>© {ano} HT Solutions. Todos os direitos reservados.</span>
+      <span>Dois Irmãos – RS · Brasil</span>
+    </div>
+  </div>
+</footer>

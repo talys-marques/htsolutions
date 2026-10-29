@@ -1,0 +1,35 @@
+{
+  "titulo": "ATAS",
+  "resumo": "<p>Comprando via ATA DE REGISTRO DE PREÇOS, órgãos públicos das esferas federal, estadual e municipal têm acesso rápido, econômico e sem burocracia aos bens e serviços de tecnologia que necessitam. Com a HT Solutions, esses órgãos ainda contam com a qualidade comprovada de marcas líderes no setor, como HPE (Hewlett Packard Enterprise), Dell, HP Inc. e Lenovo.</p>",
+  "texto": "<p>Agilidade, qualidade e garantia do melhor preço: adquira produtos e serviços de tecnologia por meio da adesão às nossas Atas de Registro de Preço, com total conformidade para órgãos públicos.</p>",
+  "titulo_atas": "Conheça as atas disponíveis:",
+  "pdf_atas": {
+    "texto": "Adquira aqui",
+    "link": "https://atas.htsolutions.com.br/a/atas/atas/"
+  },
+  "duvida": {
+    "titulo": "Está em dúvida?<br>\nNós podemos ajudá-lo.",
+    "texto": "<p>Receba todo o suporte necessário para realizar sua compra por meio de Ata de Registro de Preço, em conformidade com os princípios constitucionais da legalidade, eficiência e economicidade.<br>Com uma estrutura especializada no atendimento ao setor público e vasta experiência no segmento governamental, a HT Solutions é referência em compliance e qualidade no fornecimento de soluções tecnológicas.</p>",
+    "resumo": null,
+    "botao": {
+      "texto": "Veja atas disponíveis",
+      "link": "https://atas.htsolutions.com.br/a/atas/atas/"
+    }
+  },
+  "saiba_mais": {
+    "subtitulo": "Saiba mais sobre Atas de Registro de Preços",
+    "titulo": "Por que optar por uma Ata de Registro de Preços da HT Solutions?",
+    "texto": "<p>No intuito de viabilizar contratações mais ágeis e vantajosas, a legislação brasileira permite que a Administração Pública aproveite propostas vencedoras de concorrências realizadas por outros órgãos governamentais, desde que de abrangência equivalente ou superior.</p><p>Em outras palavras, a instituição pode aderir a um processo licitatório já concluído com sucesso, como alternativa prevista em lei, evitando a necessidade de reiniciar todas as etapas do procedimento, sem prejuízo à legalidade ou à competitividade.</p><p>Ao seguir o caminho já trilhado por órgão público parceiro, a instituição economiza tempo e reduz custos, mantendo a observância aos princípios da economicidade e da eficiência, evitando burocracia excessiva.</p><p>Nesse contexto, as Atas de Registro de Preços da HT Solutions constituem alternativa juridicamente segura, decorrente de procedimento regular, oferecendo condições previamente estabelecidas e compatíveis com o interesse público, aptas a atender às demandas da Administração com agilidade e seguridade.</p>",
+    "imagem": "business-people-shaking-hands-meeting-room-1-cfbd2f50fe-fc753c5335"
+  },
+  "cases": [],
+  "transparencia": {
+    "titulo": "Transparência no fornecimento",
+    "texto": "A HT Solutions é certificada com o selo Certigov na categoria Bronze, assegurando segurança, transparência e conformidade no fornecimento de soluções tecnológicas para órgãos públicos em todas as esferas governamentais.",
+    "background": "design-sem-nome-12-0b006fa4fc",
+    "botao": {
+      "texto": "Saiba Mais",
+      "link": "/certigov/"
+    }
+  }
+}

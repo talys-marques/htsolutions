@@ -1,0 +1,15 @@
+# Use este arquivo quando a hospedagem aponta o domínio para esta pasta
+# (e não para public/). Tudo é redirecionado internamente para public/,
+# então app/, data/, theme/ e tools/ nunca ficam acessíveis pela web.
+Options -Indexes
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  # Já está em public/: arquivo que existe é servido, o resto vai para o index.php.
+  # Alguns servidores (ex.: LiteSpeed, da Hostinger) passam de novo por aqui depois
+  # de reescrever; sem estas linhas viraria public/public/... em laço (erro 500).
+  RewriteCond %{REQUEST_FILENAME} -f
+  RewriteRule ^public/ - [L]
+  RewriteRule ^public/ public/index.php [L]
+  RewriteRule ^(.*)$ public/$1 [L]
+</IfModule>

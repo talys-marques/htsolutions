@@ -1,0 +1,24 @@
+---
+import Base from '../layouts/Base.astro';
+import pagina from '../data/politica-de-privacidade.json';
+---
+
+<Base titulo={pagina.titulo} descricao="Como a HT Solutions trata as informações pessoais de quem visita o site.">
+  <section class="cabecalho">
+    <div class="container">
+      <h1>{pagina.titulo}</h1>
+    </div>
+  </section>
+
+  <section class="secao">
+    <div class="container">
+      <div class="texto politica" set:html={pagina.texto} />
+    </div>
+  </section>
+</Base>
+
+<style>
+  .politica {
+    max-width: 820px;
+  }
+</style>

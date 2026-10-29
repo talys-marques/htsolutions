@@ -1,0 +1,22 @@
+# Apache config for the static site. The blog (blog-system) lives in /blog/ with its own .htaccess.
+
+ErrorDocument 404 /404.html
+
+<IfModule mod_alias.c>
+  # Old HP campaign (Angular site), ended: the HP showcase replaces it
+  RedirectMatch 301 ^/campanha-hp/?$ /hp/
+  # Blog post whose old slug had capital letters; the blog-system keeps slugs in lowercase
+  RedirectMatch 301 ^/blog/blog-Tecnologias-que-estao-moldando-o-futuro/?$ /blog/blog-tecnologias-que-estao-moldando-o-futuro/
+</IfModule>
+
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType text/html "access plus 0 seconds"
+  ExpiresByType text/css "access plus 1 year"
+  ExpiresByType application/javascript "access plus 1 year"
+  ExpiresByType image/avif "access plus 1 year"
+  ExpiresByType image/webp "access plus 1 year"
+  ExpiresByType image/png "access plus 1 month"
+  ExpiresByType image/jpeg "access plus 1 month"
+  ExpiresByType font/woff2 "access plus 1 year"
+</IfModule>

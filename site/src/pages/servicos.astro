@@ -1,0 +1,172 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import Titulo from '../components/Titulo.astro';
+import Icon from '../components/Icon.astro';
+import pagina from '../data/servicos.json';
+import { imagem } from '../lib/imagens.mjs';
+import { url, externo } from '../lib/site.mjs';
+
+const { intro, solucoes_google, solucoes_client, solucoes_enterprise, servicos_enterprise, servicos_client, chamado } = pagina;
+---
+
+<Base titulo="Soluções e serviços" descricao="Soluções Google, Client e Enterprise e serviços de TI: infraestrutura, redes, backup, segurança e computação pessoal com os principais fabricantes.">
+  <section class="cabecalho">
+    <div class="container duas-colunas">
+      <div>
+        <Titulo titulo={intro.titulo} nivel={1} />
+        <div class="texto" set:html={intro.texto} />
+      </div>
+      <Image src={imagem(intro.imagem)} alt="" widths={[500, 1000]} sizes="(max-width: 899px) 90vw, 500px" class="cabecalho-imagem" loading="eager" />
+    </div>
+  </section>
+
+  <section class="secao" id="google">
+    <div class="container duas-colunas">
+      <div>
+        <Titulo titulo={solucoes_google.titulo} />
+        <div class="texto texto-grande" set:html={solucoes_google.texto} />
+        <div class="botoes">
+          {solucoes_google.botoes.map((b) => <a href={url(b.link)} class="botao">{b.texto}</a>)}
+        </div>
+      </div>
+      <ul class="logos-google">
+        {solucoes_google.logos.map((l) => <li><Image src={imagem(l)} alt="" height={56} densities={[1, 2]} /></li>)}
+      </ul>
+    </div>
+  </section>
+
+  <section class="secao secao-cinza" id="client">
+    <div class="container">
+      <Titulo titulo={solucoes_client.titulo} />
+      <div class="texto texto-grande intro" set:html={solucoes_client.texto} />
+      <ul class="blocos">
+        {
+          solucoes_client.solucoes.map((s) => (
+            <li class="bloco bloco-produto">
+              <Image src={imagem(s.imagem)} alt="" height={150} densities={[1, 2]} />
+              <div class="bloco-corpo">
+                <h3>{s.titulo}</h3>
+                <p>{s.texto}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="secao" id="enterprise">
+    <div class="container duas-colunas">
+      <div>
+        <Titulo titulo={solucoes_enterprise.titulo} />
+        <div class="texto texto-grande" set:html={solucoes_enterprise.texto} />
+        <ul class="lista-check">
+          {solucoes_enterprise.lista.map((l) => <li><Icon nome="ok" /> <span set:html={l.texto.replace(/<\/?p>/g, '')} /></li>)}
+        </ul>
+      </div>
+      <Image src={imagem(solucoes_enterprise.imagem)} alt="" widths={[400, 753]} sizes="(max-width: 899px) 80vw, 420px" class="enterprise-imagem" />
+    </div>
+  </section>
+
+  <section class="secao secao-azul" id="servicos">
+    <div class="container">
+      <Titulo titulo={servicos_enterprise.titulo} />
+      <div class="texto texto-grande intro" set:html={servicos_enterprise.texto} />
+      <ul class="icones">
+        {servicos_enterprise.servicos.map((s) => <li><Image src={imagem(s.imagem)} alt="" width={44} densities={[1, 2]} /> {s.titulo}</li>)}
+      </ul>
+
+      <div class="servicos-client">
+        <Titulo titulo={servicos_client.titulo} />
+        <div class="texto texto-grande intro" set:html={servicos_client.texto} />
+        <ul class="icones">
+          {servicos_client.servicos.map((s) => <li><Image src={imagem(s.imagem)} alt="" width={44} densities={[1, 2]} /> {s.titulo}</li>)}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="secao secao-marinho chamado">
+    <div class="container">
+      <h2>{chamado.titulo}</h2>
+      <a href={url(chamado.botao.link)} class="botao botao-claro" {...(externo(chamado.botao.link) ? { target: '_blank', rel: 'noopener' } : {})}>
+        {chamado.botao.texto} <Icon nome="externo" tamanho={18} />
+      </a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .intro {
+    max-width: 820px;
+    margin-bottom: 32px;
+  }
+
+  .logos-google {
+    display: grid;
+    gap: 28px;
+    justify-items: center;
+    margin: 0;
+    padding: 40px;
+    list-style: none;
+    border-radius: var(--raio);
+    background: var(--cinza);
+  }
+
+  .logos-google img {
+    width: auto;
+    height: 56px;
+  }
+
+  .bloco-produto img {
+    width: auto;
+    height: 150px;
+    margin: 28px auto 0;
+    aspect-ratio: auto;
+    object-fit: contain;
+  }
+
+  .lista-check {
+    display: grid;
+    gap: 10px;
+    margin: 24px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .lista-check li {
+    display: flex;
+    gap: 10px;
+  }
+
+  .lista-check .icone {
+    flex: none;
+    margin-top: 3px;
+    color: var(--azul);
+  }
+
+  .enterprise-imagem {
+    justify-self: center;
+    max-height: 520px;
+    width: auto;
+  }
+
+  .servicos-client {
+    margin-top: 72px;
+  }
+
+  .chamado .container {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+  }
+
+  .chamado h2 {
+    max-width: 720px;
+    margin: 0;
+    font-size: clamp(1.3rem, 1.1rem + 0.8vw, 1.8rem);
+  }
+</style>

@@ -1,0 +1,4 @@
+# Tudo vai para o GitHub (repositório privado), inclusive data/ e uploads.
+# Só fica de fora lixo do sistema operacional.
+.DS_Store
+Thumbs.db

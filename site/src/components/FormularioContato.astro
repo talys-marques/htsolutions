@@ -1,0 +1,74 @@
+---
+// Contact form sent to Emarsys (GET to link.htsolutions.com.br, as on the old site).
+// It posts into a hidden iframe, so the visitor stays on the page and sees the thank-you message.
+import Icon from './Icon.astro';
+import { EMARSYS } from '../config.mjs';
+
+interface Props {
+  tipo: keyof typeof EMARSYS.formularios;
+}
+
+const { tipo } = Astro.props;
+const form = EMARSYS.formularios[tipo];
+const id = (campo: string) => `${tipo}-${campo}`;
+const alvo = `emarsys-${tipo}`;
+---
+
+<form class="formulario" action={EMARSYS.acao} method="get" target={alvo} data-formulario>
+  <input type="hidden" name="CID" value={EMARSYS.cid} />
+  <input type="hidden" name="f" value={form.f} />
+  <input type="hidden" name="p" value="2" />
+  <input type="hidden" name="a" value="r" />
+
+  <div class="campos">
+    <div class="campo">
+      <label for={id('nome')}>Nome</label>
+      <input id={id('nome')} name="inp_1" type="text" maxlength="60" autocomplete="given-name" required />
+    </div>
+    <div class="campo">
+      <label for={id('sobrenome')}>Sobrenome</label>
+      <input id={id('sobrenome')} name="inp_2" type="text" maxlength="60" autocomplete="family-name" required />
+    </div>
+    <div class="campo">
+      <label for={id('email')}>E-mail</label>
+      <input id={id('email')} name="inp_3" type="email" maxlength="255" autocomplete="email" required />
+    </div>
+    <div class="campo">
+      <label for={id('whatsapp')}>WhatsApp (com DDD)</label>
+      <input id={id('whatsapp')} name="inp_37" type="tel" maxlength="60" autocomplete="tel" required />
+    </div>
+    <div class="campo campo-largo">
+      <label for={id('extra')}>{form.campo.rotulo}</label>
+      <input id={id('extra')} name={form.campo.nome} type="text" maxlength="255" autocomplete="organization" required />
+    </div>
+    <div class="campo campo-largo">
+      <label for={id('mensagem')}>Mensagem</label>
+      <textarea id={id('mensagem')} name={form.mensagem} maxlength="255" rows="4" required></textarea>
+    </div>
+  </div>
+
+  <label class="opcao">
+    <input type="checkbox" name="optin" value="y" />
+    Desejo receber ofertas especiais de produtos ou serviços.
+  </label>
+
+  <button type="submit" class="botao">Enviar <Icon nome="seta" tamanho={18} /></button>
+  <p class="formulario-ok" role="status" hidden><Icon nome="ok" /> Mensagem enviada. Em breve entraremos em contato.</p>
+  <iframe name={alvo} title="Envio do formulário" hidden></iframe>
+</form>
+
+<script>
+  for (const form of document.querySelectorAll<HTMLFormElement>('[data-formulario]')) {
+    form.addEventListener('submit', () => {
+      const ok = form.querySelector<HTMLElement>('.formulario-ok');
+      const botao = form.querySelector<HTMLButtonElement>('button[type=submit]');
+      botao.disabled = true;
+      // Emarsys answers in the hidden iframe; reset after it has the data
+      setTimeout(() => {
+        form.reset();
+        botao.disabled = false;
+        ok.hidden = false;
+      }, 800);
+    });
+  }
+</script>

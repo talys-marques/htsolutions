@@ -1,0 +1,27 @@
+{
+  "titulo": "Quem somos",
+  "resumo": "<p>Somos especialistas em soluções de infraestrutura de TI, focadas em oferecer agilidade, alto desempenho e melhores resultados para empresas que atuam na era da transformação digital.</p>",
+  "texto": "<p>Com mais de <strong>19 anos de experiência no mercado B2B</strong>, a <strong>HT Solutions</strong> oferece um portfólio completo de <strong>soluções em Tecnologia da Informação (TI)</strong>, fornecendo o que há de melhor no setor por meio de parcerias com <strong>onze fabricantes de renome mundial</strong>.<br>A empresa mantém uma sólida política de <strong>qualificação e capacitação da equipe</strong>, garantindo excelência no atendimento.<br>O portfólio inclui <strong>produtos, serviços e soluções tecnológicas</strong> com a <strong>garantia dos principais fabricantes globais de TI</strong>. A HT Solutions é reconhecida internacionalmente pelos <strong>altos níveis de certificação</strong> em soluções da <strong>Hewlett Packard Enterprise (HPE)</strong>, <strong>HP Inc</strong>, <strong>Aruba</strong>, <strong>Dell</strong>, <strong>Lenovo</strong> e <strong>Veeam</strong>.</p>",
+  "titulo_parceiros": "Parceiros",
+  "video": {
+    "titulo": "Conheça mais sobre as nossas certificações",
+    "video": "https://htsolutions.blob.core.windows.net/uploads/uploads/Certificacoes_HT_Solutions_f28199faa5.mp4"
+  },
+  "premiacoes": {
+    "titulo": "Nossas premiações",
+    "premios": [
+      {
+        "texto": "<p>Em dezembro de 2021, durante o evento HPE Channel Sales Kick Off FY22 – Connected to the Future, a HT Solutions foi reconhecida com os prêmios Public Sector 2021 e Capacitação 2021, consolidando-se como a revenda mais certificada e com a equipe mais qualificada do mercado.<br>Destaque para Aury Fink Filho, Arquiteto de Soluções da empresa, que foi nomeado um dos quatro Top HPE Master ASE do mundo.<br>Com seis certificações HPE Master ASE, Aury reforça o posicionamento da HT Solutions como especialista em soluções HPE e referência em excelência técnica em projetos de infraestrutura de TI.</p>",
+        "foto": "foto-1-1-aac862f47c-b5d3467582"
+      },
+      {
+        "texto": "<p>Em dezembro de 2022, a HT Solutions foi reconhecida oficialmente pelo Google pelo trabalho de destaque realizado no setor público.<br>Essa condecoração fortalece ainda mais a parceria entre as duas empresas, que se intensificou após a licitação da SEDUC-RS, por meio da qual a HT teve a oportunidade de equipar as escolas estaduais do Rio Grande do Sul com Chromebooks — dispositivos essenciais da solução Google for Education.</p>",
+        "foto": "design-sem-nome-7-e74294e292-453deead27"
+      },
+      {
+        "texto": "<p>Ainda em dezembro de 2022, a HT Solutions foi duplamente reconhecida pela parceira Hewlett Packard Enterprise (HPE).<br>Recebeu o prêmio Simplify and Unlock Agility, pelo case inscrito com o trabalho desenvolvido para o cliente TIMAC Agro Brasil.<br>Também foi homenageada com o reconhecimento HPE FY22 PRSD LAC Top Partner Delivery Capacity, pelo alto volume de instalações de hardware e software (HW e SW) realizadas com 100% de satisfação dos clientes.</p>",
+        "foto": "foto-3-d1f493047c-ddc16a9fa2"
+      }
+    ]
+  }
+}
