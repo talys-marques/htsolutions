@@ -1,0 +1,146 @@
+---
+import { Image, Picture } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import mulher from '../assets/img/certigov-woman_holding_notebook.png';
+import fabricantes from '../assets/img/certigov-fabricantes.png';
+import fabricantesMobile from '../assets/img/certigov-fabricantes-mobile.png';
+import certificado from '../assets/img/certigov-certificado.png';
+import comite from '../assets/img/certigov-comite.png';
+
+// Ethics channels; texts were fixed in the old site's code (not in Strapi)
+const FABRICANTES = 'AMD, Dell, Google, HP, Hewlett Packard Enterprise, Intel, Lenovo, Samsung e VMware';
+const DIRETOR = 'wagner.filho@herval.com.br';
+const CANAL_ETICA = { telefone: { texto: '0800 810 8557', link: 'tel:08008108557' }, site: 'https://www.contatoseguro.com.br/grupoherval' };
+---
+
+<Base
+  titulo="Canais de transparência"
+  descricao="Canais de transparência e ética da HT Solutions, certificada com o selo Certigov: fale com o diretor ou com o Canal de Ética do Grupo Herval."
+  formulario="atas"
+>
+  <section class="cabecalho">
+    <div class="container duas-colunas">
+      <div>
+        <h1>Conheça os canais de transparência da HT Solutions</h1>
+        <p class="texto-grande">
+          Somos especialistas em soluções de infraestrutura de TI, que proporcionam agilidade, desempenho e melhores resultados para
+          empresas na era da transformação digital.
+        </p>
+      </div>
+      <Image src={mulher} alt="" widths={[400, 603]} sizes="(max-width: 899px) 80vw, 480px" class="cabecalho-imagem" loading="eager" />
+    </div>
+  </section>
+
+  <div class="faixa-fabricantes">
+    <div class="container">
+      {/* White logos: they need the navy band behind them. The square version is for phones. */}
+      <Image src={fabricantes} alt={FABRICANTES} widths={[600, 1200]} sizes="(max-width: 1247px) 100vw, 1200px" class="largo" />
+      <Image src={fabricantesMobile} alt={FABRICANTES} width={300} densities={[1, 2]} class="mobile" />
+    </div>
+  </div>
+
+  <section class="secao">
+    <div class="container">
+      <p class="texto-grande centro">
+        A forte parceria com fabricantes globais como HP, HP Enterprise, Dell, Google, Lenovo, Intel, AMD e VMware é o resultado de um
+        trabalho de melhoria contínua, que envolve acompanhamento do desenvolvimento das necessidades do mercado, fazendo com que nos
+        mantenhamos atualizados e que prestemos um serviço de qualidade.
+      </p>
+      <Image src={certificado} alt="Certificado Certigov categoria Bronze da HT Solutions" widths={[443, 886]} sizes="(max-width: 899px) 100vw, 700px" class="certificado" />
+    </div>
+  </section>
+
+  <section class="secao secao-cinza">
+    <div class="container duas-colunas">
+      <div>
+        <h2>Comitê de Ética</h2>
+        <p class="texto-grande">
+          Caso você perceba alguma atividade suspeita ou prática de corrupção por parte de algum funcionário da HT Solutions,
+          independentemente do cargo que este funcionário ocupe na empresa, ou terceirizado que preste serviços para a HT, denuncie
+          para o nosso Comitê de Ética HT Solutions.
+        </p>
+      </div>
+      <Image src={comite} alt="" widths={[426]} sizes="(max-width: 899px) 80vw, 426px" class="comite" />
+    </div>
+  </section>
+
+  <section class="secao secao-marinho">
+    <div class="container contato-etica">
+      <div>
+        <h2>Fale com o diretor</h2>
+        <p>Entre em contato por e-mail diretamente com o nosso diretor, sem intermediários.</p>
+        <a href={`mailto:${DIRETOR}`} class="botao botao-claro"><Icon nome="email" tamanho={18} /> Falar com o diretor</a>
+      </div>
+      <div>
+        <h2>Canal de Ética</h2>
+        <p>
+          Se preferir, ligue para <a href={CANAL_ETICA.telefone.link}>{CANAL_ETICA.telefone.texto}</a> ou acesse
+          <a href={CANAL_ETICA.site} target="_blank" rel="noopener">contatoseguro.com.br/grupoherval</a>.
+        </p>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .faixa-fabricantes {
+    background: var(--marinho);
+  }
+
+  .faixa-fabricantes .largo {
+    width: 100%;
+  }
+
+  .faixa-fabricantes .mobile {
+    display: none;
+    margin-inline: auto;
+  }
+
+  @media (max-width: 599px) {
+    .faixa-fabricantes .largo {
+      display: none;
+    }
+
+    .faixa-fabricantes .mobile {
+      display: block;
+    }
+  }
+
+  .centro {
+    max-width: 860px;
+    margin: 0 auto 48px;
+    text-align: center;
+  }
+
+  .certificado {
+    width: 100%;
+    max-width: 700px;
+    margin-inline: auto;
+  }
+
+  .comite {
+    justify-self: center;
+    width: min(380px, 100%);
+  }
+
+  .contato-etica {
+    display: grid;
+    gap: 40px;
+  }
+
+  @media (min-width: 900px) {
+    .contato-etica {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  .contato-etica a:not(.botao) {
+    color: var(--branco);
+    overflow-wrap: anywhere;
+  }
+
+  .contato-etica > * {
+    min-width: 0;
+  }
+</style>

@@ -1,0 +1,63 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import Titulo from '../components/Titulo.astro';
+import Parceiros from '../components/Parceiros.astro';
+import pagina from '../data/quem-somos.json';
+import { imagem } from '../lib/imagens.mjs';
+
+const { titulo, resumo, texto, titulo_parceiros, video, premiacoes } = pagina;
+---
+
+<Base titulo={titulo} descricao="Há mais de 19 anos a HT Solutions entrega infraestrutura de TI com os principais fabricantes do mundo. Conheça nossa história, certificações e premiações.">
+  <section class="cabecalho">
+    <div class="container">
+      <Titulo titulo={titulo} nivel={1} />
+      <div class="texto" set:html={resumo} />
+    </div>
+  </section>
+
+  <section class="secao">
+    <div class="container duas-colunas">
+      <div class="texto texto-grande" set:html={texto} />
+      <div>
+        <h2 class="video-titulo">{video.titulo}</h2>
+        <video class="video" src={video.video} controls preload="metadata" playsinline></video>
+      </div>
+    </div>
+  </section>
+
+  <section class="secao secao-cinza">
+    <div class="container">
+      <Titulo titulo={premiacoes.titulo} />
+      <div class="premios">
+        {
+          premiacoes.premios.map((p, i) => (
+            <div class:list={['duas-colunas', { inverter: i % 2 }]}>
+              <Image src={imagem(p.foto)} alt="" widths={[480, 960]} sizes="(max-width: 899px) 100vw, 560px" class="imagem-arredondada" />
+              <div class="texto" set:html={p.texto} />
+            </div>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="secao secao-azul" id="parceiros">
+    <div class="container">
+      <Titulo titulo={titulo_parceiros} />
+      <Parceiros />
+    </div>
+  </section>
+</Base>
+
+<style>
+  .video-titulo {
+    font-size: 1.4rem;
+  }
+
+  .premios {
+    display: grid;
+    gap: 56px;
+  }
+</style>

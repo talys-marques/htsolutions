@@ -1,0 +1,22 @@
+{
+  "name": "htsolutions",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "verificar": "node scripts/verificar-links.mjs",
+    "importar": "node scripts/importar-strapi.mjs"
+  },
+  "engines": {
+    "node": ">=22.23.4"
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.7.4",
+    "@fontsource-variable/plus-jakarta-sans": "^5.3.0",
+    "astro": "^7.4.2",
+    "sharp": "^0.35.5"
+  }
+}
