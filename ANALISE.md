@@ -54,7 +54,7 @@ Fora do escopo (são outros sistemas e continuam como links): `produtos.htsoluti
 - **SEO**: todas as páginas têm o mesmo `<title>` ("HT Solutions") e a mesma descrição, inclusive os posts.
 - **Sem `sitemap.xml` e `robots.txt`**: os dois endereços devolvem a página 404 do Angular com HTTP 200.
 - **404 com status 200**: o Google indexa páginas inexistentes.
-- **Imagens enormes**: a capa do post mais recente tem 7373 × 4147 px. O build do Astro resolve gerando WebP/AVIF nos tamanhos certos.
+- **Imagens enormes**: a capa do post mais recente tem 7373 × 4147 px. O blog-system resolve: reduz no envio e gera versões menores em WebP.
 - **Imagens quebradas**: dois posts apontam para um IP interno (`http://172.28.0.11:1337`): `dell-optiplex-7090-excelente-desempenho-em-pouco-espaco` e `2021-um-ano-de-sucesso-para-a-ht`.
 - **HTML sujo nos posts**: textos colados do ChatGPT trazem atributos `data-start`/`data-end` e classes como `PDq2pG_selectionAnchorContainer`. Dá para limpar na importação.
 - **Slugs genéricos**: `blog`, `blog-1`, `blog-3`, `blog-4`, `blog-5`. Manter para não quebrar links, mas os novos posts deveriam ter slug pelo título.
@@ -62,43 +62,44 @@ Fora do escopo (são outros sistemas e continuam como links): `produtos.htsoluti
 - **Fontes**: Museo e Mundial são pedidas ao Google Fonts, que não as tem; o navegador cai na fonte padrão.
 - **Logo do `/certigov`** vem de `www.htsolutions.com.br/wp-content/uploads/...`, resto do WordPress antigo.
 
-## Arquitetura escolhida: páginas estáticas + blog-system em `/blog/`
+## Arquitetura escolhida: o site inteiro no blog-system
 
-Não há acesso ao painel do Strapi, então o Strapi sai. As páginas institucionais viram HTML estático (Astro, mesmo padrão de `hquimica/`), e o blog passa para o [blog-system](blog/README.md) (PHP sem banco), instalado na pasta `/blog/` do mesmo domínio.
+Primeiro o site foi refeito em Astro (HTML estático) com o blog-system em `/blog/`. Na apresentação, o negócio pediu para continuar editando textos, menus e imagens sozinho, como fazia no Strapi. Por isso o site inteiro passou para o blog-system (PHP, sem banco), com um painel de **Conteúdo do site**: um formulário de campos fixos por página.
 
-```
-htsolutions.com.br/            páginas estáticas (Astro → dist/)
-htsolutions.com.br/blog/       blog-system (PHP), com painel em /blog/admin
-```
+- **Um painel só**, em `/admin`, para o site e o blog, com usuários e papéis. O papel "autor" edita conteúdo, mas não mexe em configurações técnicas.
+- **Estrutura protegida**: dá para trocar textos, imagens e links, e acrescentar, mover ou tirar itens das listas. A montagem das páginas não muda pelo painel.
+- **Publica na hora**, com histórico das últimas 20 versões de cada página e botão de restaurar.
+- **Visual e conteúdo** são os mesmos da versão em Astro, que saiu do repositório (fica no histórico do primeiro commit).
+- **Hospedagem**: Apache com PHP 8.1+, a pasta `site/` inteira.
 
-- **Hospedagem**: o blog-system precisa de PHP 8.1+, então o conjunto não vai para o GitHub Pages. Serve qualquer Apache com PHP (hospedagem compartilhada, cPanel): o `dist/` do Astro na raiz e a pasta `blog/` dentro dele.
-- **Endereços**: com o blog em `/blog/`, `/blog/{slug}` continua funcionando (redireciona para `/blog/{slug}/`, o formato do blog-system). `/blog/categoria/{slug}` redireciona para `/blog/category/{slug}/`.
-- **Slug com maiúsculas**: o post `blog-Tecnologias-que-estao-moldando-o-futuro` virou `blog-tecnologias-...` no blog-system. O `.htaccess` do site redireciona o endereço antigo.
-- **Home institucional**: os blocos "blog" e "cases" leem os últimos posts no navegador, de `/blog/ultimos.json`.
+### Endereços
 
-## O que já está feito
+| Antes (Angular) | Agora |
+|---|---|
+| `/`, `/servicos`, `/quem-somos`, `/atas`... | os mesmos, com barra no fim |
+| `/blog` | `/blog/` (lista de posts) |
+| `/blog/{slug}` | `/{slug}/` (redireciona) |
+| `/blog/categoria/{slug}` | `/category/{slug}/` (redireciona) |
+| `/campanha-hp` | `/hp/` (redireciona; promoção encerrada) |
 
-- `blog/`: cópia do blog-system baixada de `github.com/fabianokunst/blog-system` em 29/10/2026, **só o código**. Ficaram de fora o `.git`, os hooks do `.claude/` (que fazem commit e push automático para o repositório do Fabiano) e os dados do blog da taQi que estão no repositório (posts, usuários, uploads). O `run.bat` é o da `nova intranet`, que liga as extensões do PHP do winget.
-- `blog/extensions/strapi-import/`: extensão que importa os posts do Strapi, a partir da cópia em `dados/` ou da API. Detalhes no [README dela](blog/extensions/strapi-import/README.md).
-- `blog/public/uploads/strapi/`: as 147 imagens e vídeos dos posts, já baixados do Azure (52 MB, imagens reduzidas a 2000 px de largura).
-- Teste completo numa pasta de dados temporária: 117 posts, todos com capa, texto limpo, vídeos do YouTube e `<video>` funcionando, categoria redirecionando e 404 de verdade. Rodar de novo atualiza os mesmos posts.
-- Perdidas de vez: as 2 imagens que apontavam para `172.28.0.11` (não existem no Azure). Saíram do texto.
+O post que usava o endereço `blog` (case de Giruá) virou `/case-ht-solutions-google-for-education-em-girua-rs/`, porque `/blog/` é a lista de posts. O endereço antigo redireciona.
 
-**Falta para os posts aparecerem no blog de verdade**: rodar `blog/run.bat`, criar a conta de administrador em `/admin` (no campo do nome do blog, digite **Blog HT Solutions**: se ficar vazio, ele grava "Meu Blog" por cima da configuração do tema) e depois rodar `php extensions/strapi-import/cli.php ../dados/strapi-2026-10-29` (comando completo no README da extensão). As imagens já estão baixadas, então leva segundos.
+## O que está feito
 
-## Páginas estáticas (feito)
-
-O site institucional está em [site/](site/README.md), em Astro, no padrão do `hquimica`. São 11 páginas com os mesmos endereços do Angular. Os textos e imagens foram convertidos do Strapi para `site/src/data/*.json`. O build passa sem erros e sem links internos quebrados, e as páginas foram conferidas no navegador, no desktop e no celular.
-
-- **Formulários**: contato e newsletter iam para a Emarsys, não para o Strapi, então nada muda. O único que gravava no Strapi era o da `/campanha-hp`, uma promoção encerrada que agora redireciona para `/hp/`.
-- **Últimos posts e cases** na home e na página Google: vêm do blog em tempo real, por `/blog/ultimos.json` (extensão `blog/extensions/ultimos-posts/`).
-- **Consulta de garantias**: funciona igual ao site antigo, decifrando a base no navegador. Testada.
-- O README do site lista o que mudou e as pendências de conteúdo (política de privacidade com lei portuguesa, termos de uso, vídeos no Azure, logo em baixa resolução).
+- **11 páginas** do site como páginas do blog com campos fixos (`site/extensions/site-ht/`), mais a lista de posts em `/blog/`.
+- **117 posts** importados do Strapi, com imagens e vídeos baixados (`site/public/uploads/strapi/`).
+- **Topo, rodapé, contatos, redes e parceiros** editáveis num formulário só ("Topo, rodapé e contatos").
+- **Formulários da Emarsys** como no site antigo, cada página com o seu.
+- **Consulta de garantias** igual à do site antigo, decifrando a base no navegador.
+- **SEO**: título e descrição por página (editáveis no formulário), sitemap, 404 de verdade, redirecionamentos.
+- **Apresentação no GitHub Pages** gerada a cada push (cópia estática, sem painel e sem busca).
+- Testado: edição de texto, lista nova, lista dentro de lista (submenu), troca de imagem pela biblioteca, restauração de versão, limpeza de HTML perigoso, páginas e painel no celular.
 
 ## Decisões pendentes
 
-- **Hospedagem com PHP** para o conjunto (onde roda hoje o Express não serve).
-- **Tema do blog (feito)**: o blog usa o topo, o rodapé, as cores e a fonte Asap do site, com uma barra própria abaixo do topo (nome do blog, menu de Configurações → Menu e busca). Formulário de contato da Emarsys no rodapé, sem modo escuro. Detalhes na seção "Tema da HT Solutions" de `blog/CLAUDE.md`.
-- **Termos de uso**: a página existe sem conteúdo. Pedir o texto ou tirar do ar.
-- **`/hp` e `/campanha-hp`**: confirmar se a campanha ainda está ativa antes de migrar.
-- **Mídia**: baixar tudo do blob para o repositório (site independente do Azure) ou continuar apontando para o blob.
+- **Hospedagem com PHP** (onde roda hoje o Express não serve).
+- **Termos de uso**: a página existe sem conteúdo no site antigo. Pedir o texto ou deixar fora.
+- **Política de privacidade**: cita a lei portuguesa de proteção de dados (Lei n.º 67/98), não a LGPD. Precisa de revisão do jurídico.
+- **Vídeos institucionais** (122 MB e 90 MB) continuam no Azure. Se o Azure for desligado, subir no YouTube e trocar o endereço no painel.
+- **Páginas novas** (landing pages de campanha) não entram pelo painel: cada página nova precisa de um modelo, feito por desenvolvedor.
+- **Logo**: o arquivo do site antigo tem 171 px de largura; vale pedir a versão em SVG.

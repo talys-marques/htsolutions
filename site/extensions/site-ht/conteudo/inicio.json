@@ -1,0 +1,155 @@
+{
+    "titulo": "Início",
+    "slug": "inicio",
+    "descricao": "",
+    "campos": {
+        "abertura": {
+            "sobretitulo": "Integradora de TI · Grupo Herval",
+            "titulo": "Tecnologia que performa",
+            "texto": "Da escolha dos equipamentos à gestão completa da sua infraestrutura, garantimos eficiência, segurança e continuidade para o seu negócio.",
+            "botao": {
+                "texto": "Fale com um especialista",
+                "link": "#contato"
+            },
+            "botao_secundario": {
+                "texto": "Conheça as soluções",
+                "link": "/servicos/"
+            },
+            "marcas": "Dell · HPE · HP · Google · Lenovo · Samsung",
+            "foto_1": "/uploads/site/design-sem-nome-5-e5975fd685.jpg",
+            "foto_2": "/uploads/site/foto-3-d1f493047c-ddc16a9fa2.png",
+            "foto_3": "/uploads/site/design-sem-nome-7-e74294e292-453deead27.jpg",
+            "selo_valor": "+19 anos",
+            "selo_texto": "transformando desafios em soluções"
+        },
+        "atalhos": [
+            {
+                "icone": "carrinho",
+                "titulo": "Produtos em estoque",
+                "texto": "Encontre notebooks, desktops, monitores e muito mais, com entrega rápida.",
+                "link": "https://produtos.htsolutions.com.br/p/produtos/",
+                "rotulo": "Ver produtos"
+            },
+            {
+                "icone": "documento",
+                "titulo": "Atas de Registro de Preço",
+                "texto": "Aquisições mais ágeis, menos burocracia, com preços já definidos e qualidade garantida para sua empresa.",
+                "link": "https://atas.htsolutions.com.br/a/atas/atas/",
+                "rotulo": "Adquira aqui"
+            },
+            {
+                "icone": "capelo",
+                "titulo": "Educação",
+                "texto": "Tecnologia que transforma e potencializa o aprendizado.",
+                "link": "/educacao/",
+                "rotulo": "Conheça as soluções"
+            },
+            {
+                "icone": "parceria",
+                "titulo": "Parcerias que aceleram",
+                "texto": "Trabalhamos com as principais marcas tecnológicas do mundo para entregar infraestrutura, performance, segurança e inovação para o seu negócio.",
+                "link": "/servicos/",
+                "rotulo": "Saiba mais"
+            },
+            {
+                "icone": "predio",
+                "titulo": "Quem somos",
+                "texto": "Há mais de 19 anos transformando desafios em soluções tecnológicas.",
+                "link": "/quem-somos/",
+                "rotulo": "Conheça nossa história"
+            }
+        ],
+        "numeros": [
+            {
+                "valor": "+19 anos",
+                "texto": "no mercado de tecnologia B2B"
+            },
+            {
+                "valor": "+50 mil",
+                "texto": "Chromebooks entregues em projetos de educação"
+            },
+            {
+                "valor": "11",
+                "texto": "fabricantes parceiros de renome mundial"
+            },
+            {
+                "valor": "Brasil",
+                "texto": "empresas, órgãos públicos e escolas em todo o país"
+            }
+        ],
+        "solucoes": {
+            "sobretitulo": "Soluções",
+            "titulo": "Nossas soluções de TI",
+            "texto": "<p>Ao lado de parceiros como Google, HPE, Dell, Samsung e HP, fornecemos equipamentos, implantamos projetos e gerenciamos ambientes de TI para empresas do setor privado, órgãos públicos e instituições de ensino em todo o Brasil. Atuamos com infraestrutura de TI, cloud, segurança da informação e serviços gerenciados, garantindo desempenho, proteção de dados e continuidade operacional.</p>",
+            "link": {
+                "texto": "Ver todas as soluções",
+                "link": "/servicos/"
+            },
+            "itens": [
+                {
+                    "titulo": "Infraestrutura",
+                    "texto": "Ao lado de parceiros como Google, Dell, HP, HPE e Samsung, oferecemos soluções tecnológicas corporativas focadas em inovação e performance.",
+                    "imagem": "/uploads/site/electronic-devices-empty-data-center-29880ffbe8.jpg",
+                    "link": "/servicos/"
+                },
+                {
+                    "titulo": "Client",
+                    "texto": "Notebooks, monitores, desktops e workstations das principais marcas como Dell, HP, Samsung e Lenovo.",
+                    "imagem": "/uploads/site/smiley-woman-talking-phone-coffee-shop-4a3be53236.jpg",
+                    "link": "/servicos/"
+                },
+                {
+                    "titulo": "Rede",
+                    "texto": "Monitoramento inteligente em tempo real para mais segurança, desempenho e controle da sua TI.",
+                    "imagem": "/uploads/site/data-center-computer-scientist-using-laptop-protect-servers-from-exploitable-software-61cb.jpg",
+                    "link": "/servicos/"
+                }
+            ]
+        },
+        "quem_somos": {
+            "sobretitulo": "Quem somos",
+            "titulo": "Conheça um pouco mais da nossa história",
+            "texto": "<p>A HT Solutions possui mais de 19 anos de história no mercado de tecnologia e integra o Grupo Herval, um dos maiores conglomerados empresariais do Brasil, ao lado de marcas reconhecidas como a iPlace.</p>",
+            "destaques": [
+                {
+                    "texto": "Revenda com as mais altas certificações HPE, HP, Dell, Lenovo e Veeam"
+                },
+                {
+                    "texto": "Equipe técnica própria para projeto, implantação e suporte"
+                },
+                {
+                    "texto": "Atendimento ao setor privado, público e educacional"
+                }
+            ],
+            "video": "https://htsolutions.blob.core.windows.net/uploads/uploads/HT_A_Historia_4f71724db6.mp4",
+            "botao": {
+                "texto": "Conheça nossa história",
+                "link": "/quem-somos/"
+            }
+        },
+        "parceiros": {
+            "sobretitulo": "Parceiros",
+            "titulo": "Estamos ligados às maiores marcas tecnológicas do mundo.",
+            "link": {
+                "texto": "O que fazemos com cada parceiro",
+                "link": "/quem-somos/#parceiros"
+            }
+        },
+        "cases": {
+            "sobretitulo": "CASES",
+            "titulo": "Veja como podemos levar o seu negócio para o próximo nível",
+            "botao": {
+                "texto": "Ver todos os cases",
+                "link": "/category/cases/"
+            }
+        },
+        "blog": {
+            "sobretitulo": "Blog",
+            "titulo": "Últimas notícias",
+            "botao": {
+                "texto": "Ver todas as notícias",
+                "link": "/blog/"
+            }
+        }
+    }
+}

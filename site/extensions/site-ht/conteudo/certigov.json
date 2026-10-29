@@ -1,0 +1,33 @@
+{
+    "titulo": "Canais de transparência",
+    "slug": "certigov",
+    "descricao": "Canais de transparência e ética da HT Solutions, certificada com o selo Certigov: fale com o diretor ou com o Canal de Ética do Grupo Herval.",
+    "campos": {
+        "intro": {
+            "titulo": "Conheça os canais de transparência da HT Solutions",
+            "texto": "Somos especialistas em soluções de infraestrutura de TI, que proporcionam agilidade, desempenho e melhores resultados para empresas na era da transformação digital.",
+            "imagem": "/uploads/site/certigov-woman_holding_notebook.png"
+        },
+        "fabricantes": {
+            "imagem": "/uploads/site/certigov-fabricantes.png",
+            "imagem_mobile": "/uploads/site/certigov-fabricantes-mobile.png",
+            "texto": "A forte parceria com fabricantes globais como HP, HP Enterprise, Dell, Google, Lenovo, Intel, AMD e VMware é o resultado de um trabalho de melhoria contínua, que envolve acompanhamento do desenvolvimento das necessidades do mercado, fazendo com que nos mantenhamos atualizados e que prestemos um serviço de qualidade."
+        },
+        "certificado": "/uploads/site/certigov-certificado.png",
+        "comite": {
+            "titulo": "Comitê de Ética",
+            "texto": "Caso você perceba alguma atividade suspeita ou prática de corrupção por parte de algum funcionário da HT Solutions, independentemente do cargo que este funcionário ocupe na empresa, ou terceirizado que preste serviços para a HT, denuncie para o nosso Comitê de Ética HT Solutions.",
+            "imagem": "/uploads/site/certigov-comite.png"
+        },
+        "diretor": {
+            "titulo": "Fale com o diretor",
+            "texto": "Entre em contato por e-mail diretamente com o nosso diretor, sem intermediários.",
+            "email": "wagner.filho@herval.com.br",
+            "botao": "Falar com o diretor"
+        },
+        "etica": {
+            "titulo": "Canal de Ética",
+            "texto": "<p>Se preferir, ligue para <a href=\"tel:08008108557\">0800 810 8557</a> ou acesse <a href=\"https://www.contatoseguro.com.br/grupoherval\" target=\"_blank\" rel=\"noopener\">contatoseguro.com.br/grupoherval</a>.</p>"
+        }
+    }
+}

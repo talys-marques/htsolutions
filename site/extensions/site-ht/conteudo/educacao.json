@@ -1,0 +1,115 @@
+{
+    "titulo": "Google for Education",
+    "slug": "educacao",
+    "descricao": "A HT Solutions é um dos maiores parceiros do Google for Education na América Latina: Chromebooks, Google Workspace for Education e Google Classroom para escolas públicas e privadas.",
+    "campos": {
+        "intro": {
+            "logo": "/uploads/site/group-249-b053253b4f-7e63fc3b6a.png",
+            "titulo": "Tecnologia que impulsiona <strong>a educação</strong>",
+            "texto": "<p>A <strong>HT Solutions</strong> é especialista em <strong>soluções tecnológicas para a educação</strong>. Por meio do <strong>Google for Education</strong>, nos tornamos referência no mercado educacional, com grandes projetos implementados em instituições de ensino públicas e privadas em todo o Brasil.<br>Atualmente, somos um dos  <strong>maiores parceiros do Google na América Latina</strong>, com uma equipe altamente qualificada para <strong>planejar</strong>, <strong>executar</strong> e <strong>oferecer suporte</strong> no gerenciamento de <strong>dispositivos educacionais</strong> e computadores para sala de aula.</p>",
+            "imagem": "/uploads/site/frame-24-2-c672bf993c-1127b75c2a.png"
+        },
+        "destaques": [
+            {
+                "titulo": "+50 Mil",
+                "texto": "Chromebooks entregues"
+            },
+            {
+                "titulo": "Atendimento a rede estadual",
+                "texto": "do Rio Grande do Sul"
+            },
+            {
+                "titulo": "Presente em diferentes projetos",
+                "texto": "pelo Brasil"
+            }
+        ],
+        "definicao": {
+            "titulo": "Use a tecnologia para inovar dentro e fora da sala de aula.",
+            "texto": "<p>O <strong>Google for Education</strong> é a solução do Google desenvolvida especialmente para o setor educacional. Com essa plataforma, sua instituição de ensino tem acesso às <strong>ferramentas educacionais mais intuitivas do mercado</strong>.<br>Crie, compartilhe e avalie de forma descomplicada utilizando os <strong>aplicativos Google</strong> que você já conhece, e revolucione a maneira de <strong>ensinar e aprender</strong> com tecnologia acessível e eficiente.</p>",
+            "botao": {
+                "texto": "Transforme a educação da sua instituição",
+                "link": "/conheca-o-gfe-e-saiba-como-essa-tecnologia-pode-impulsionar-o-trabalho-dos-professores/"
+            },
+            "blocos": [
+                {
+                    "imagem": "/uploads/site/google-workspace-675dcfc96c-c3daddff1b.png",
+                    "texto": "<p>Com o <strong>Google Workspace for Education</strong>, educadores e alunos inovam juntos por meio de um poderoso conjunto de <strong>ferramentas de colaboração para a aprendizagem</strong>.<br>Essa solução educacional do Google é utilizada por mais de <strong>120 milhões de professores e estudantes</strong> em todo o mundo, promovendo um ensino mais conectado, interativo e eficiente.</p>"
+                },
+                {
+                    "imagem": "/uploads/site/google-classroom-e3a74c606d-2d81ba8136.png",
+                    "texto": "<p>O <strong>Google Classroom</strong> é uma <strong>ferramenta gratuita de gestão da sala de aula</strong>, utilizada por mais de <strong>100 milhões de estudantes e professores</strong> em todo o mundo.<br>Com ela, é possível <strong>criar turmas</strong>, <strong>distribuir atividades</strong>, <strong>enviar feedbacks personalizados</strong> e <strong>gerenciar dispositivos educacionais</strong> – tudo em uma única plataforma integrada.</p>"
+                },
+                {
+                    "imagem": "/uploads/site/chromebook-7fcda2e8eb-3a3607f7b3.png",
+                    "texto": "<p>Utilizado por mais de <strong>40 milhões de estudantes</strong> em todo o mundo, o <strong>Chromebook</strong> foi projetado especialmente para atender às necessidades dos alunos mais exigentes.<br>Trata-se de um equipamento <strong>robusto</strong>, <strong>durável</strong> e com <strong>custo acessível</strong>, ideal para o ambiente educacional moderno.</p>"
+                }
+            ]
+        },
+        "motivos": {
+            "titulo": "Por que escolher Google for Education?",
+            "blocos": [
+                {
+                    "icone": "/uploads/site/cloud-azul-ed3ead998a-9abf4e3bd0.png",
+                    "titulo": "Sua escola inteira sempre preparada",
+                    "texto": "<p>Com <strong>configuração rápida</strong> e <strong>gestão simples na nuvem</strong>, os dispositivos com <strong>Chrome OS</strong> facilitam a <strong>colaboração entre professores e alunos</strong>.<br>Além disso, oferecem <strong>atualizações automáticas</strong> e <strong>múltiplas camadas de segurança</strong>, garantindo um ambiente educacional mais eficiente e protegido.</p>"
+                },
+                {
+                    "icone": "/uploads/site/cloud-vermelho-a9f3d24eaf-cd1fd6e691.png",
+                    "titulo": "Eleve as notas e não o orçamento",
+                    "texto": "<p><strong>Preços acessíveis</strong> e <strong>dispositivos compartilháveis</strong> tornam o uso da tecnologia ainda mais viável para instituições de ensino.<br>Com o <strong>menor custo total de aquisição do mercado</strong>, o <strong>Google Workspace for Education Fundamentals</strong> é <strong>completamente gratuito</strong>, oferecendo uma solução poderosa e econômica para escolas públicas e privadas.</p>"
+                },
+                {
+                    "icone": "/uploads/site/amarelo-9131354f58-29a48ff8fd.png",
+                    "titulo": "Colaboração total e em altíssimo nível",
+                    "texto": "<p>Com <strong>ferramentas de produtividade robustas</strong> e uma ampla variedade de <strong>dispositivos compatíveis</strong>, os professores podem colaborar de qualquer lugar — seja individualmente ou com toda a turma.<br>O <strong>Google for Education</strong> abre um universo de <strong>conteúdos dinâmicos</strong>, com acesso a <strong>milhões de aplicações educacionais</strong> que enriquecem o processo de ensino-aprendizagem.</p>"
+                },
+                {
+                    "icone": "/uploads/site/vector-0d2c8ddc5c-3ecdda3861.png",
+                    "titulo": "Fazer a diferença dentro e fora da sala de aula",
+                    "texto": "<p>Elimine as tarefas morosas de organização e permita que os professores foquem no que realmente importa: ensinar com qualidade.<br>Com as soluções do Google for Education, é possível promover o desenvolvimento de competências essenciais e a personalização da aprendizagem, contribuindo diretamente para a melhora no desempenho dos alunos.</p>"
+                }
+            ]
+        },
+        "playlist": {
+            "sobretitulo": "De frente para o futuro",
+            "titulo": "Veja quem já utiliza o Google For Education",
+            "videos": [
+                {
+                    "titulo": "Episódio 1 - Chromebook",
+                    "link": "https://youtu.be/fgvJC9c60Do",
+                    "duracao": "1:43"
+                },
+                {
+                    "titulo": "Episódio 2 - Ferramentas",
+                    "link": "https://youtu.be/wV1owVD9tok",
+                    "duracao": "1:23"
+                },
+                {
+                    "titulo": "Episódio 3 - Nova Educação",
+                    "link": "https://youtu.be/fECVXMxkfvY",
+                    "duracao": "1:19"
+                },
+                {
+                    "titulo": "Episódio 4 - Imersão",
+                    "link": "https://youtu.be/5c2UArtvNYc",
+                    "duracao": "1:21"
+                },
+                {
+                    "titulo": "Episódio 5 - O futuro da educação começa agora",
+                    "link": "https://youtu.be/zhp1S7iczLI",
+                    "duracao": "1:47"
+                }
+            ]
+        },
+        "case": {
+            "sobretitulo": "Case",
+            "titulo": "Educação do futuro a partir de agora",
+            "post": "chromebook-o-melhor-dispositivo-para-a-educacao",
+            "video": "https://www.youtube.com/embed/fSygZEooAX4?si=myc7jU8mZ1pghzby",
+            "botao": {
+                "texto": "Conheça mais cases de sucesso",
+                "link": "/category/cases/"
+            }
+        }
+    }
+}

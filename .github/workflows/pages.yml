@@ -1,5 +1,5 @@
-# Presentation on GitHub Pages, on every push to main: the static site plus a static copy of
-# the blog. The blog-system is PHP, which Pages can't run, so it runs here only to be copied.
+# Presentation on GitHub Pages, on every push to main. The site is PHP (blog-system), which
+# Pages can't run: it runs here with the repository content and a static copy gets published.
 # In Settings > Pages, choose "GitHub Actions" as the source.
 name: Apresentação no GitHub Pages
 
@@ -20,14 +20,14 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      BLOG_DATA_DIR: ${{ github.workspace }}/../dados-site
     steps:
       - uses: actions/checkout@v5
 
       - uses: actions/setup-node@v5
         with:
           node-version: 24
-          cache: npm
-          cache-dependency-path: site/package-lock.json
 
       - uses: shivammathur/setup-php@v2
         with:
@@ -38,47 +38,26 @@ jobs:
       - id: pages
         uses: actions/configure-pages@v5
 
-      - name: Instalar dependências do site
-        run: npm ci
-        working-directory: site
-
-      - name: Gerar o site
-        run: npm run build
-        working-directory: site
-        env:
-          SITE_URL: ${{ steps.pages.outputs.origin }}
-          BASE_PATH: ${{ steps.pages.outputs.base_path }}
-          PUBLIC_APRESENTACAO: '1'
-
-      # Throwaway data folder: the blog's settings without the production address, analytics
-      # and indexing, a one-off admin account (random password, discarded) and the posts from Strapi
-      - name: Preparar o blog com os posts do Strapi
-        env:
-          BLOG_DATA_DIR: ${{ runner.temp }}/blog-data
+      # Throwaway data folder: the site's settings without the production address, analytics
+      # and indexing, a one-off admin account (random password, discarded), the blog posts from
+      # Strapi and the site pages from site/extensions/site-ht/conteudo/
+      - name: Montar o site com o conteúdo do repositório
         run: |
           mkdir -p "$BLOG_DATA_DIR"
-          php -r '$s = json_decode(file_get_contents("blog/data/settings.json"), true); $s["url"] = ""; $s["head_code"] = ""; $s["seo_hide_site"] = true; file_put_contents(getenv("BLOG_DATA_DIR") . "/settings.json", json_encode($s));'
-          php -r 'require "blog/app/bootstrap.php"; Auth::create("apresentacao", "Apresentação", bin2hex(random_bytes(16)), "admin");'
-          php blog/extensions/strapi-import/cli.php dados/strapi-2026-10-29
+          php -r '$s = json_decode(file_get_contents("site/data/settings.json"), true); $s["url"] = ""; $s["head_code"] = ""; $s["seo_hide_site"] = true; unset($s["home_page"], $s["blog_page"]); file_put_contents(getenv("BLOG_DATA_DIR") . "/settings.json", json_encode($s));'
+          php -r 'require "site/app/bootstrap.php"; Auth::create("apresentacao", "Apresentação", bin2hex(random_bytes(16)), "admin");'
+          php site/extensions/strapi-import/cli.php dados/strapi-2026-10-29
+          php site/extensions/site-ht/instalar.php
 
-      - name: Copiar o blog para dentro do site
-        env:
-          BLOG_DATA_DIR: ${{ runner.temp }}/blog-data
-          HT_SITE_BASE: ${{ steps.pages.outputs.base_path }}
+      - name: Copiar o site em HTML
         run: |
-          php -S 127.0.0.1:8080 -t blog/public blog/public/index.php > "$RUNNER_TEMP/php.log" 2>&1 &
+          php -S 127.0.0.1:8080 -t site/public site/public/index.php > "$RUNNER_TEMP/php.log" 2>&1 &
           sleep 2
-          node site/scripts/blog-estatico.mjs http://127.0.0.1:8080 site/dist/blog "${{ steps.pages.outputs.base_url }}/blog"
-
-      - name: Verificar links
-        run: npm run verificar
-        working-directory: site
-        env:
-          BASE_PATH: ${{ steps.pages.outputs.base_path }}
+          node apresentacao/estatico.mjs http://127.0.0.1:8080 _site "${{ steps.pages.outputs.base_url }}"
 
       - uses: actions/upload-pages-artifact@v4
         with:
-          path: site/dist
+          path: _site
 
   deploy:
     needs: build
