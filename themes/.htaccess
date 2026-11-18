@@ -1,0 +1,7 @@
+# Temas (têm PHP): nunca servir pela web. CSS, JS e imagens passam pela rota /themes/{tema}/assets/
+<IfModule mod_authz_core.c>
+  Require all denied
+</IfModule>
+<IfModule !mod_authz_core.c>
+  Deny from all
+</IfModule>

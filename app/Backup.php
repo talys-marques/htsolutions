@@ -1,7 +1,8 @@
 <?php
 /**
- * Backup para download: data/ (posts, usuários, configurações) e,
- * opcionalmente, os arquivos enviados (public/uploads/ e public/wp-content/uploads/).
+ * Backup para download: data/ (posts, usuários, configurações), os temas
+ * instalados (themes/) e, opcionalmente, os arquivos enviados (public/uploads/
+ * e public/wp-content/uploads/).
  * Gera .zip quando a extensão zip existe e .tar.gz caso contrário (os dois
  * abrem em qualquer sistema).
  *
@@ -77,9 +78,10 @@ final class Backup
     }
 
     /** Envia o arquivo para download e apaga do servidor. */
-    public static function send(string $file): never
+    /** Envia o arquivo para download e o apaga. $name: nome que o navegador salva (padrão: o do arquivo). */
+    public static function send(string $file, ?string $name = null): never
     {
-        $name = basename($file);
+        $name ??= basename($file);
         header('Content-Type: ' . (str_ends_with($name, '.zip') ? 'application/zip' : 'application/gzip'));
         header('Content-Disposition: attachment; filename="' . $name . '"');
         header('Content-Length: ' . filesize($file));
@@ -96,6 +98,8 @@ final class Backup
         $map = [];
         // import/ guarda arquivos temporários de importações (ex.: .xml do WordPress)
         self::collect($map, DATA_DIR, 'data', ['cache', 'sessions', 'logs', 'import']);
+        // Temas instalados pelo painel (themes/): sem eles, restaurar voltaria ao tema padrão.
+        self::collect($map, THEMES_DIR, 'themes');
         if ($withUploads) {
             // public/uploads e, se o blog veio do WordPress, public/wp-content/uploads
             foreach (Media::roots() as $dir) {

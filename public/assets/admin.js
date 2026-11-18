@@ -149,23 +149,29 @@
 
   /* ===================================================== Campos de imagem (capa, logo) */
 
+  /** Campo com prévia, "Escolher" e "Remover". Com data-files aceita qualquer arquivo da Mídia (PDF...). */
   function initImageField(box) {
     const input = $('input[type=hidden]', box);
     const preview = $('.image-preview', box);
     const remove = $('[data-image-remove]', box);
+    const images = !box.hasAttribute('data-files');
     const render = () => {
-      preview.innerHTML = input.value ? `<img src="${escapeHtml(input.value)}" alt="">` : '';
+      const name = decodeURIComponent(input.value.split('/').pop() || '');
+      preview.innerHTML = !input.value ? ''
+        : images ? `<img src="${escapeHtml(input.value)}" alt="">`
+        : `<a href="${escapeHtml(input.value)}" target="_blank" rel="noopener">${escapeHtml(name)}</a>`;
       remove.hidden = !input.value;
     };
     // Campo oculto não avisa sozinho quando muda (a prévia da página inicial escuta 'change').
     const changed = () => { render(); markDirty(); input.dispatchEvent(new Event('change', { bubbles: true })); };
     $('[data-image-pick]', box).addEventListener('click', async () => {
-      const file = await pickMedia();
+      const file = await pickMedia({ images });
       if (file) { input.value = file.url; changed(); }
     });
     remove.addEventListener('click', () => { input.value = ''; changed(); });
     render();
   }
+
   $$('[data-image-field]').forEach(initImageField);
 
   /* ===================================================== Categorias e tags */
@@ -958,6 +964,91 @@
 
   $$('[data-editor]').forEach(initEditor);
 
+  /* ===================================================== Conteúdo do site */
+
+  /*
+   * Formulário de uma página com modelo (app/views/admin/content-edit.php). Cada campo é um
+   * [data-field] (a chave) com data-kind (o tipo, de app/Field.php); grupos e itens de lista têm
+   * campos dentro. Ao salvar, tudo vira um JSON no campo "fields", na mesma estrutura do modelo,
+   * e o PHP confere cada valor de novo (Field::clean).
+   */
+  const contentForm = $('[data-content-form]');
+  if (contentForm) {
+    // Campos que pertencem direto a um contêiner (o formulário, um grupo ou um item de lista).
+    const own = (box) => $$('[data-field]', box).filter((el) => el.parentElement.closest('[data-field], .cf-item, form') === box);
+    const read = (box) => Object.fromEntries(own(box).map((el) => [el.dataset.field, value(el)]));
+    const value = (el) => {
+      switch (el.dataset.kind) {
+        case 'group': return read(el);
+        case 'list': return [...$('.cf-items', el).children].map(read);
+        case 'html': return $('.editor-source', el).value;
+        case 'image':
+        case 'file': return $('input[type=hidden]', el).value;
+        default: return $('input, textarea, select', el).value;
+      }
+    };
+
+    // Item fechado mostra o valor do campo de resumo (ex.: a pergunta) no lugar de "Pergunta".
+    const name = (item) => {
+      const list = item.closest('.cf-list');
+      const field = list.dataset.summary && own(item).find((el) => el.dataset.field === list.dataset.summary);
+      const text = field ? String(value(field)).replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim() : '';
+      if (text) $('.cf-item-name', item).textContent = text;
+    };
+    $$('.cf-item', contentForm).forEach(name);
+    contentForm.addEventListener('input', (e) => {
+      markDirty();
+      const item = e.target.closest('.cf-item');
+      if (item) name(item);
+    });
+
+    contentForm.addEventListener('click', (e) => {
+      const button = e.target.closest('[data-cf-add], [data-cf-up], [data-cf-down], [data-cf-remove]');
+      if (!button) return;
+      e.preventDefault(); // os botões ficam dentro do <summary>: sem isso, o item abriria e fecharia
+      const item = button.closest('.cf-item');
+      if (button.matches('[data-cf-add]')) {
+        const list = button.closest('.cf-list');
+        const fresh = $(':scope > template', list).content.firstElementChild.cloneNode(true);
+        $(':scope > .cf-items', list).append(fresh);
+        $$('[data-image-field]', fresh).forEach(initImageField);
+        $$('[data-editor]', fresh).forEach(initEditor);
+        fresh.open = true;
+        $('input, textarea, [contenteditable]', fresh)?.focus();
+      } else if (button.matches('[data-cf-up]') && item.previousElementSibling) {
+        item.previousElementSibling.before(item);
+      } else if (button.matches('[data-cf-down]') && item.nextElementSibling) {
+        item.nextElementSibling.after(item);
+      } else if (button.matches('[data-cf-remove]')) {
+        if (!confirm('Remover este item? Ele só sai do site quando você salvar.')) return;
+        item.remove();
+      }
+      markDirty();
+    });
+
+    // Endereço acompanha o título enquanto a página é rascunho e ninguém mexeu nele.
+    const title = $('[name=title]', contentForm);
+    const slug = $('[name=slug]', contentForm);
+    if (title && slug) {
+      let manual = !slug.dataset.auto;
+      slug.addEventListener('input', () => { manual = true; });
+      slug.addEventListener('change', () => { slug.value = slugify(slug.value); });
+      title.addEventListener('input', () => { if (!manual) slug.value = slugify(title.value); });
+    }
+
+    contentForm.addEventListener('submit', () => {
+      contentForm.elements.fields.value = JSON.stringify(read(contentForm));
+    });
+
+    // Ctrl+S salva.
+    document.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's') {
+        e.preventDefault();
+        if (contentForm.requestSubmit) contentForm.requestSubmit(); else contentForm.submit();
+      }
+    });
+  }
+
   /* ===================================================== Formulário do post */
 
   const form = $('#post-form');
@@ -1211,7 +1302,4 @@
       prompt('Copie o endereço:', btn.dataset.copy);
     }
   }));
-
-  // Para telas de extensões que criam campos depois do carregamento (ex.: itens de lista).
-  window.BlogAdmin = { pickMedia, initImageField, initEditor, markDirty };
 })();

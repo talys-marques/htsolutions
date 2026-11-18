@@ -479,7 +479,10 @@ function render_file(string $__file, array $__vars = []): string
     }
 }
 
-/** Renderiza theme/{template}.php dentro de theme/layout.php. */
+/**
+ * Renderiza {template}.php dentro de layout.php. Cada arquivo vem do tema ativo
+ * (themes/{tema}/) ou, se ele não tiver, do tema padrão (theme/). Veja app/Themes.php.
+ */
 function theme(string $template, array $vars = [], int $status = 200): void
 {
     $vars += ['meta' => [], 'body_class' => $template];
@@ -487,20 +490,51 @@ function theme(string $template, array $vars = [], int $status = 200): void
         Seo::redirectToCanonical($vars['meta']['canonical']); // ex.: /post sem a barra → /post/
     }
     $vars['site'] = Settings::all();
-    $vars['content'] = render_file(THEME_DIR . '/' . $template . '.php', $vars);
+    Themes::config(); // o functions.php do tema pode ter funções usadas nos templates
+    $vars['content'] = render_file(Themes::file($template), $vars);
     http_response_code($status);
     header('Content-Type: text/html; charset=UTF-8');
     if (Auth::user()) {
         // Quem está logado vê rascunhos e a barra do painel: nada de cache compartilhado.
         header('Cache-Control: private, no-store');
     }
-    echo render_file(THEME_DIR . '/layout.php', $vars);
+    echo render_file(Themes::file('layout'), $vars);
 }
 
-/** Inclui theme/partials/{name}.php. */
+/** Inclui partials/{name}.php (do tema ativo ou do padrão). */
 function partial(string $name, array $vars = []): void
 {
-    echo render_file(THEME_DIR . '/partials/' . $name . '.php', $vars + ['site' => Settings::all()]);
+    echo render_file(Themes::file('partials/' . $name), $vars + ['site' => Settings::all()]);
+}
+
+/**
+ * Lugar onde o tema ativo pode acrescentar um bloco: themes/{tema}/slots/{nome}.php.
+ * Nos templates: <?php slot('home-top', get_defined_vars()) ?>. Sem o arquivo, não sai nada.
+ * Lista dos lugares em themes/README.md.
+ */
+function slot(string $name, array $vars = []): void
+{
+    if ($file = Themes::slotFile($name)) {
+        echo render_file($file, $vars + ['site' => Settings::all()]);
+    }
+}
+
+/** Num template de tema, mostra o template do tema padrão: <?php theme_parent('home', get_defined_vars()) ?> */
+function theme_parent(string $template, array $vars = []): void
+{
+    echo render_file(THEME_DIR . '/' . $template . '.php', $vars + ['site' => Settings::all()]);
+}
+
+/** Opção do tema ativo (Painel → Temas → Personalizar), definida no theme.json dele. */
+function theme_option(string $key, $default = null)
+{
+    return Themes::options()[$key] ?? $default;
+}
+
+/** URL de um arquivo de assets/ do tema ativo ('' se ele não tiver). Ex.: theme_asset('img/selo.svg') */
+function theme_asset(string $file): string
+{
+    return Themes::assetUrl($file);
 }
 
 /**

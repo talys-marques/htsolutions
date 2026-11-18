@@ -13,7 +13,8 @@ if (PHP_VERSION_ID < 80100) {
 define('ROOT_DIR', dirname(__DIR__));
 define('APP_DIR', __DIR__);
 define('PUBLIC_DIR', ROOT_DIR . '/public');
-define('THEME_DIR', ROOT_DIR . '/theme');
+define('THEME_DIR', ROOT_DIR . '/theme'); // tema padrão
+define('THEMES_DIR', ROOT_DIR . '/themes'); // temas instalados (veja app/Themes.php)
 define('EXTENSIONS_DIR', ROOT_DIR . '/extensions');
 
 // Cada classe fica em app/NomeDaClasse.php (ou extensions/{nome}/NomeDaClasse.php)

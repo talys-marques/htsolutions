@@ -3,6 +3,7 @@
  * Editor de post/página.
  * @var array $post  @var array|null $item  @var string|null $error
  * @var array $categories  @var array $tags  @var array $revisions  @var array $authors
+ * @var array $templates  modelos de Conteúdo do site (só páginas)
  */
 $isPage = $post['type'] === 'page';
 $isNew = !$post['id'];
@@ -10,6 +11,9 @@ $isPublished = $post['status'] === 'published';
 $isPublic = $item && Posts::isPublic($item);
 $action = $isNew ? url('/admin/posts/new') : url('/admin/posts/' . $post['id']);
 $viewUrl = $isPublic ? post_url($item) : ($isNew ? null : url('/admin/preview/' . $post['id']));
+$template = SiteContent::forPost($post); // página com modelo: o conteúdo é editado em Conteúdo do site
+// Modelos que o admin pode escolher para a página (os 'shared' só aparecem na página que já é deles).
+$templateChoices = array_filter($templates, fn($t) => !$t['shared'] || $t['name'] === $post['template']);
 
 $termsBox = function (string $name, string $label, array $current, array $suggestions, string $placeholder) {
     ob_start(); ?>
@@ -60,6 +64,12 @@ $termsBox = function (string $name, string $label, array $current, array $sugges
           Para trocar, vá em <a href="<?= e(url('/admin/settings#pagina-inicial')) ?>">Configurações → Página inicial</a>.</p>
       <?php endif ?>
 
+      <?php if ($template): ?>
+        <div class="alert alert-warning">
+          Esta página usa o modelo <strong><?= e($template['label']) ?></strong>: textos, imagens e listas são editados em
+          <a href="<?= e(url('/admin/content/' . $post['id'])) ?>">Conteúdo do site</a>. O texto abaixo não aparece no site.
+        </div>
+      <?php endif ?>
       <?= render_file(__DIR__ . '/_editor.php', ['name' => 'content', 'value' => $post['content'], 'placeholder' => 'Escreva aqui… (arraste imagens para cá)']) ?>
       <p class="hint">Atalhos: <kbd>Ctrl</kbd>+<kbd>S</kbd> salva · clique numa imagem para editar texto alternativo e legenda.</p>
 
@@ -140,6 +150,22 @@ $termsBox = function (string $name, string $label, array $current, array $sugges
         <h3>Resumo</h3>
         <textarea name="excerpt" rows="3" placeholder="Aparece nas listagens. Vazio = início do texto."><?= e($post['excerpt']) ?></textarea>
       </section>
+
+      <?php if ($isPage && Auth::isAdmin() && ($templateChoices || $post['template'] !== '')): ?>
+        <section class="box">
+          <h3>Modelo</h3>
+          <select name="template" aria-label="Modelo da página">
+            <option value="">Nenhum: texto livre</option>
+            <?php foreach ($templateChoices as $name => $t): ?>
+              <option value="<?= e($name) ?>"<?= $name === $post['template'] ? ' selected' : '' ?>><?= e($t['label']) ?></option>
+            <?php endforeach ?>
+            <?php if ($post['template'] !== '' && !$template): ?>
+              <option value="<?= e($post['template']) ?>" selected><?= e($post['template']) ?> (não existe no tema ativo)</option>
+            <?php endif ?>
+          </select>
+          <p class="hint">Com um modelo, o tema monta a página e o conteúdo é editado em Conteúdo do site, num formulário com campos fixos.</p>
+        </section>
+      <?php endif ?>
 
       <?php if (count($authors) > 1): ?>
         <section class="box">

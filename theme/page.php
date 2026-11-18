@@ -1,20 +1,11 @@
 <?php
 /**
  * Página fixa (Sobre, Contato...).
- * Páginas do site da HT têm um modelo: o conteúdo vem dos campos (Conteúdo do site, no painel)
- * e o template é theme/site/{modelo}.php.
- * @var array $post  @var bool $preview
+ * @var array $post  @var bool $preview  @var bool $is_home  esta é a página escolhida como inicial
  */
-$modelo = basename((string) ($post['modelo'] ?? ''));
-if ($modelo !== '' && is_file(__DIR__ . "/site/$modelo.php") && class_exists('SiteHT')) {
-    require_once __DIR__ . '/site/_partes.php';
-    $c = SiteHT::completar($modelo, $post['campos'] ?? []);
-    echo '<div class="pg pg-' . e($modelo) . '">';
-    include __DIR__ . "/site/$modelo.php";
-    echo '</div>';
-    return;
-}
+$isHome = !empty($is_home);
 ?>
+<?php if ($isHome) slot('home-top', get_defined_vars()) ?>
 <?php if ($preview): ?>
   <div class="preview-bar">Pré-visualização · esta página ainda não está publicada</div>
 <?php endif ?>
@@ -29,4 +20,6 @@ if ($modelo !== '' && is_file(__DIR__ . "/site/$modelo.php") && class_exists('Si
   <div class="prose narrow">
     <?= $post['content'] ?>
   </div>
+  <?php slot('page-after-content', get_defined_vars()) ?>
 </article>
+<?php if ($isHome) slot('home-bottom', get_defined_vars()) ?>

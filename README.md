@@ -17,11 +17,13 @@ build) e sem atualizações automáticas que quebram coisas.
 | Área | O que tem |
 |---|---|
 | Conteúdo | Posts e páginas, rascunho, agendamento (data futura), categorias, tags, imagem de capa, resumo, lixeira e **revisões** (últimas 20 versões de cada post) |
+| Conteúdo do site | Páginas com **campos fixos** que o time de negócio edita num formulário (textos, imagens, links, listas de itens), sem conseguir quebrar a montagem da página. Os modelos ficam no tema (`fields/` + `templates/`); vem pronto o modelo "Página de apresentação" para campanhas. Veja [`themes/README.md`](themes/README.md#páginas-com-campos-conteúdo-do-site) |
 | Editor | Editor visual próprio (sem bibliotecas): títulos, negrito, listas, citação, código, links, imagens (arrastar, colar ou escolher da biblioteca), vídeos do YouTube/Vimeo, legenda e texto alternativo, modo HTML, `Ctrl+S`, limpeza do que é colado do Word/Google Docs e **cópia local de segurança** do texto enquanto você escreve |
 | Mídia | Biblioteca com envio múltiplo e redução automática de imagens grandes |
 | SEO | URLs iguais às do WordPress (`/slug/`, `/category/x/`, `/tag/x/`, `/?s=`, `/?p=123`), título e descrição por post, Open Graph, JSON-LD, sitemap.xml, robots.txt, **redirecionamentos 301** (automáticos quando o endereço de um post muda) |
 | Migração | Importador do WordPress **opcional**, como extensão separada (veja [Extensões](#extensões)), pela tela ou pelo terminal, que mantém endereços, datas, categorias, tags, capas e descrições do Yoast/Rank Math |
-| Operação | Backup para download, exportação no formato do WordPress, códigos de analytics no `<head>`, tema com modo escuro automático, painel responsivo |
+| Temas | Tema padrão com modo escuro automático e **4 temas prontos** com telas iniciais diferentes (Holofote, Passarela, Bússola e Vizinhança). Cada tema tem opções próprias com prévia ao vivo, pode ser pré-visualizado antes de ativar e vai de um site para outro num .zip, com as opções preenchidas. Veja [`themes/README.md`](themes/README.md) |
+| Operação | Backup para download, exportação no formato do WordPress, códigos de analytics no `<head>`, painel responsivo |
 | Segurança | Senhas com `password_hash`, CSRF em todo formulário, limite de tentativas de login, HTML dos autores filtrado, uploads sem execução de PHP, dados fora da pasta pública, nenhum cookie para visitantes |
 
 ## Dá para fazer sem banco de dados? Sim, e com folga para um blog
@@ -223,6 +225,8 @@ app/                  código do sistema
   Router.php          rotas
   Storage.php         leitura/gravação de JSON (atômica e com trava)
   Posts.php           posts, páginas, índice, busca, revisões
+  SiteContent.php     Conteúdo do site: páginas com modelo (campos fixos editados num formulário)
+  Field.php           tipos de campo dos modelos (texto, imagem, lista...)
   Auth.php            usuários, login, sessões e permissões
   Media.php           uploads
   Redirects.php       redirecionamentos 301
@@ -230,6 +234,8 @@ app/                  código do sistema
   Site.php            páginas públicas
   Admin.php           telas do painel
   Extensions.php      carrega as extensões de extensions/
+  Themes.php          temas: escolha, opções, prévia, instalação e cópia em .zip
+  Zip.php             leitura e criação de .zip em PHP puro
   Html.php            filtro de HTML dos autores
   Backup.php
   Export.php          exportação no formato do WordPress (WXR)
@@ -238,7 +244,9 @@ app/                  código do sistema
   views/admin/        templates do painel
 extensions/           recursos opcionais (apague a pasta para remover)
   wordpress-import/   importador do WordPress
-theme/                templates do site público (layout, home, post...)
+theme/                tema Padrão: templates do site público (layout, home, post...)
+  fields/, templates/ modelos de página do Conteúdo do site (vem a "Página de apresentação")
+themes/               temas instalados, cada um só com o que muda (guia em themes/README.md)
 public/               única pasta acessível pela web
   index.php           porta de entrada
   assets/             site.css, admin.css, admin.js

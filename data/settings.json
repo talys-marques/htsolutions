@@ -45,6 +45,7 @@
     "home_featured": true,
     "home_columns": 3,
     "home_intro": true,
+    "theme": "ht",
     "seo_home_title": "",
     "seo_separator": "–",
     "seo_hide_site": false,
