@@ -242,6 +242,8 @@ em `/{slug}/` e a lista de posts em `/blog/`. Tudo o que é da HT está no tema 
 | Imagens das páginas | `public/uploads/site/` |
 | Conteúdo inicial das páginas (versionado) | `themes/ht/content/*.json` |
 | Instalação (páginas, `/blog/`, início, redirecionamentos do site antigo) | `php themes/ht/instalar.php` (`--atualizar`, `--exportar`) |
+| Configurações da HT na primeira instalação | `themes/ht/settings.json` (depois valem as do painel, em `data/settings.json`, fora do Git) |
+| Publicação na Hostinger | branch `producao` = pasta `site/` na raiz, atualizada por `.github/workflows/producao.yml` da raiz do repositório. `data/` e uploads novos ficam fora do Git (`.gitignore` desta pasta) |
 
 - **Consulta de garantias**: a base é `public/assets/db_943hf3.bin` (fora do Git, tem nomes de
   clientes), decifrada no navegador por `paginas.js` como no site antigo. A senha está no

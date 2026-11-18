@@ -7,9 +7,10 @@
  *   php themes/ht/instalar.php --exportar   grava em content/ o que está no site (para versionar no Git)
  *
  * As páginas vêm do Conteúdo do site do núcleo (SiteContent::install/export, o mesmo que
- * tools/site-content.php). Este script acrescenta o que é só da HT: ativa o tema, cria a página
- * dos posts (/blog/), escolhe o início e redireciona os endereços do site antigo
- * (/blog/slug → /slug/). Precisa da conta de administrador.
+ * tools/site-content.php). Este script acrescenta o que é só da HT: na primeira vez, aplica as
+ * configurações de settings.json e ativa o tema; cria a página dos posts (/blog/), escolhe o
+ * início e redireciona os endereços do site antigo (/blog/slug → /slug/). Precisa da conta de
+ * administrador.
  */
 if (PHP_SAPI !== 'cli') {
     exit("Use pela linha de comando.\n");
@@ -17,9 +18,12 @@ if (PHP_SAPI !== 'cli') {
 require dirname(__DIR__, 2) . '/app/bootstrap.php';
 
 $opcoes = array_slice($argv, 1);
+// Primeira vez neste site: configurações da HT (themes/ht/settings.json: nome, cores, menu do
+// blog, Google Tag Manager, SEO) e o tema. Depois disso, as configurações são do painel.
 if (setting('theme') !== 'ht') {
-    Settings::save(['theme' => 'ht']);
-    echo "  tema ativado: HT Solutions\n";
+    $padrao = json_decode((string) file_get_contents(__DIR__ . '/settings.json'), true);
+    Settings::save(['theme' => 'ht'] + (is_array($padrao) ? $padrao : []));
+    echo "  configurações da HT aplicadas e tema ativado\n";
 }
 
 if (in_array('--exportar', $opcoes, true)) {
