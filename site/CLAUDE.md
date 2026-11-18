@@ -220,6 +220,12 @@ O código do núcleo (`app/`, `theme/`, `tools/`, `public/index.php`, `public/as
 sem mudanças. Não faça commit nem push para o repositório do Fabiano a partir daqui. Para
 atualizar, copie de novo esses arquivos do `main`: o que é da HT fica fora deles.
 
+Exceção: `themes/.htaccess`. O original nega tudo ("Require all denied"); com o domínio apontando
+para esta pasta (Hostinger), isso bloqueava também a rota `/themes/{tema}/assets/...` (403 no CSS,
+fontes e logos), porque o servidor confere o acesso da pasta antes do `.htaccess` da raiz. O nosso
+manda todo pedido de `/themes/` para `public/index.php`. **Ao atualizar o núcleo, não sobrescreva
+este arquivo** (a não ser que o blog-system já traga a correção).
+
 ## Site da HT Solutions
 
 Este blog-system é o site inteiro de htsolutions.com.br: páginas institucionais na raiz, posts

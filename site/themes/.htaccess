@@ -1,7 +1,21 @@
-# Temas (têm PHP): nunca servir pela web. CSS, JS e imagens passam pela rota /themes/{tema}/assets/
-<IfModule mod_authz_core.c>
-  Require all denied
+# Temas (têm PHP): nada daqui é servido direto. Todo pedido para /themes/... vai para o
+# public/index.php, que só entrega o que está em themes/{tema}/assets/ (rota
+# /themes/{tema}/assets/..., Themes::serveAsset) e dá 404 para o resto, PHP incluído.
+#
+# Ajuste da HT (o original era só "Require all denied"): com o domínio apontando para esta
+# pasta (Hostinger), o servidor confere o acesso da pasta antes de aplicar o .htaccess da
+# raiz, e o "denied" bloqueava também o CSS, as fontes e as imagens dos temas (erro 403).
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteRule ^ /public/index.php [L]
 </IfModule>
-<IfModule !mod_authz_core.c>
-  Deny from all
+
+# Sem mod_rewrite, nada passa.
+<IfModule !mod_rewrite.c>
+  <IfModule mod_authz_core.c>
+    Require all denied
+  </IfModule>
+  <IfModule !mod_authz_core.c>
+    Deny from all
+  </IfModule>
 </IfModule>
