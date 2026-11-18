@@ -26,6 +26,12 @@ $router->post('/admin/posts/{id:\d+}/revision', fn($p) => Admin::restoreRevision
 $router->post('/admin/posts/{id:\d+}/{action:trash|restore|delete}', fn($p) => Admin::postAction((int) $p['id'], $p['action']));
 $router->get('/admin/preview/{id:\d+}', fn($p) => Admin::preview((int) $p['id']));
 
+// Conteúdo do site: páginas com modelo (app/SiteContent.php).
+$router->get('/admin/content', fn() => Admin::content());
+$router->post('/admin/content/install', fn() => Admin::contentInstall());
+$router->post('/admin/content/new/{template:[a-z0-9-]+}', fn($p) => Admin::contentNew($p['template']));
+$router->any('/admin/content/{id:\d+}', fn($p) => Admin::contentEdit((int) $p['id']));
+
 $router->get('/admin/media', fn() => Admin::media());
 $router->get('/admin/media/list', fn() => Admin::mediaJson());
 $router->post('/admin/media/upload', fn() => Admin::upload());
@@ -44,6 +50,12 @@ $router->any('/admin/redirects', fn() => Admin::redirects());
 $router->any('/admin/seo', fn() => Admin::seo());
 $router->get('/admin/seo/terms', fn() => Admin::seoTerms());
 $router->any('/admin/seo/terms/{kind:category|tag}/{slug}', fn($p) => Admin::seoTerm($p['kind'], $p['slug']));
+// Temas: a lista recebe por POST o envio do .zip, ativar, baixar e excluir.
+$router->any('/admin/themes', fn() => Admin::themes());
+$router->get('/admin/themes/preview', fn() => Admin::themePreview(null)); // sai da pré-visualização
+$router->get('/admin/themes/preview/{slug:[a-z0-9-]+}', fn($p) => Admin::themePreview($p['slug']));
+$router->any('/admin/themes/{slug:[a-z0-9-]+}', fn($p) => Admin::themeOptions($p['slug']));
+$router->post('/admin/themes/{slug:[a-z0-9-]+}/frame', fn($p) => Admin::themeFrame($p['slug']));
 $router->get('/admin/tools', fn() => Admin::tools());
 $router->post('/admin/tools/backup', fn() => Admin::backup());
 $router->post('/admin/tools/export', fn() => Admin::export());

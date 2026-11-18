@@ -52,6 +52,9 @@ final class Posts
             'seo_description' => '',
             'seo_keyword' => '', // palavra-chave principal, usada só na análise do editor
             'seo_noindex' => false, // true = fora do Google e do sitemap
+            // Páginas com modelo (Painel → Conteúdo do site, app/SiteContent.php)
+            'template' => '', // nome do modelo; '' = página comum
+            'fields' => [], // valores dos campos do modelo
         ];
     }
 
@@ -290,6 +293,8 @@ final class Posts
             $post['excerpt'] = trim((string) $post['excerpt']);
             $post['categories'] = clean_list($post['categories']);
             $post['tags'] = clean_list($post['tags']);
+            $post['template'] = preg_match('/^[a-z0-9-]+$/', (string) $post['template']) ? $post['template'] : '';
+            $post['fields'] = is_array($post['fields']) ? $post['fields'] : [];
             $slug = slugify((string) $post['slug']) ?: slugify($post['title']) ?: 'post-' . $id;
             $post['slug'] = self::uniqueSlug($slug, $id);
             if ($post['status'] === 'published' && $post['published_at'] === '') {
@@ -373,10 +378,15 @@ final class Posts
         if (!is_array($revision) || !$current) {
             return null;
         }
-        $fields = ['title', 'content', 'excerpt', 'cover', 'cover_alt', 'categories', 'tags', 'seo_title', 'seo_description', 'seo_keyword', 'seo_noindex'];
+        $fields = ['title', 'content', 'excerpt', 'cover', 'cover_alt', 'categories', 'tags', 'seo_title', 'seo_description', 'seo_keyword', 'seo_noindex', 'template', 'fields'];
         $data = self::paths(array_intersect_key($revision, array_flip($fields)), 'add_base');
         if ($cleanHtml && isset($data['content'])) {
             $data['content'] = Html::clean((string) $data['content']);
+        }
+        // Campos do modelo: conferidos de novo pelo modelo de agora (o HTML passa por Html::clean).
+        $template = isset($data['fields']) ? SiteContent::forPost(['type' => $current['type']] + $data + $current) : null;
+        if ($template) {
+            $data['fields'] = Field::clean($template['fields'], $data['fields']);
         }
         return self::save(['id' => $id] + $data);
     }
@@ -475,6 +485,10 @@ final class Posts
         if (isset($post['cover'])) {
             $post['cover'] = $fn((string) $post['cover']);
         }
+        // Imagens, links e HTML dos campos do modelo (os tipos vêm do modelo, em app/SiteContent.php).
+        if (App::$basePath !== '' && !empty($post['fields']) && ($template = SiteContent::template((string) ($post['template'] ?? '')))) {
+            $post['fields'] = Field::paths($template['fields'], $post['fields'], $fn);
+        }
         return $post;
     }
 
@@ -506,7 +520,7 @@ final class Posts
             'status' => $post['status'],
             'title' => $post['title'],
             'slug' => $post['slug'],
-            'excerpt' => $post['excerpt'] !== '' ? $post['excerpt'] : excerpt_from($post['content']),
+            'excerpt' => $post['excerpt'] !== '' ? $post['excerpt'] : excerpt_from($post['content'] !== '' ? $post['content'] : e(self::fieldsText($post))),
             'cover' => $post['cover'],
             'categories' => $post['categories'],
             'tags' => $post['tags'],
@@ -518,6 +532,9 @@ final class Posts
         ];
         if (isset($post['wp_id'])) {
             $item['wp_id'] = (int) $post['wp_id'];
+        }
+        if ($post['template'] !== '') {
+            $item['template'] = $post['template']; // Conteúdo do site lista as páginas sem abrir cada arquivo
         }
         if (!empty($post['seo_noindex'])) {
             $item['noindex'] = true; // o sitemap deixa de fora
@@ -541,7 +558,15 @@ final class Posts
             plain_text($post['content']),
             implode(' ', $post['categories']),
             implode(' ', $post['tags']),
+            self::fieldsText($post),
         ]))));
+    }
+
+    /** Texto dos campos do modelo (páginas do Conteúdo do site), para a busca e o resumo. */
+    private static function fieldsText(array $post): string
+    {
+        $template = SiteContent::forPost($post);
+        return $template ? Field::plainText($template['fields'], $post['fields']) : '';
     }
 
     private static function search(array $items, string $query): array

@@ -238,6 +238,12 @@ final class Site
         $isHome = post_path($post) === '/'; // página escolhida como inicial
         $canonical = absolute_url(post_path($post));
         $category = $isPost ? ($post['categories'][0] ?? null) : null;
+        // Página com modelo (Painel → Conteúdo do site): o texto vem dos campos, e o HTML de templates/{modelo}.php do tema.
+        $template = SiteContent::forPost($post);
+        if ($template && !is_file(Themes::file('templates/' . $template['name']))) {
+            $template = null; // modelo sem template: mostra como página comum
+        }
+        $text = $template ? e(Field::plainText($template['fields'], $post['fields'])) : $post['content'];
 
         $meta = [
             // Na página inicial fixa, sem título de SEO próprio, valem o título e a descrição do blog (Painel → SEO).
@@ -245,7 +251,7 @@ final class Site
             'og_title' => $post['seo_title'] ?: ($isHome ? setting('title') : $post['title']),
             'headline' => $post['title'],
             'description' => $post['seo_description'] ?: ($isHome ? Seo::siteDescription() : '')
-                ?: ($post['excerpt'] ?: excerpt_from($post['content'], 160)),
+                ?: ($post['excerpt'] ?: excerpt_from($text, 160)),
             'canonical' => $canonical,
             'image' => $post['cover'],
             'image_alt' => $post['cover_alt'],
@@ -269,7 +275,7 @@ final class Site
         // Imagens do texto: carregamento sob demanda e versões menores (srcset).
         $post['content'] = Media::optimizeHtml($post['content'], $post['cover'] === '');
 
-        theme($post['type'] === 'page' ? 'page' : 'post', [
+        $vars = [
             'post' => $post,
             'author' => $author,
             'prev' => $prev,
@@ -277,9 +283,20 @@ final class Site
             // "Leia também" (Configurações → Leitura), sem repetir o anterior e o próximo.
             'related' => $isPost ? Posts::related($post, (int) setting('related_posts', 3), array_column(array_filter([$prev, $next]), 'id')) : [],
             'preview' => $preview,
+            'is_home' => $isHome,
             'reading_time' => reading_time($post['content']),
             'meta' => $meta,
-        ] + ($isHome ? ['body_class' => 'page front-page'] : []));
+        ];
+        if ($template) {
+            // theme/template.php mostra templates/{modelo}.php com os campos completos ($fields).
+            theme('template', [
+                'template' => $template['name'],
+                'fields' => Field::fill($template['fields'], $post['fields']),
+                'body_class' => 'page template-' . $template['name'] . ($isHome ? ' front-page' : ''),
+            ] + $vars);
+            return;
+        }
+        theme($post['type'] === 'page' ? 'page' : 'post', $vars + ($isHome ? ['body_class' => 'page front-page'] : []));
     }
 
     /** Links antigos do WordPress: /?p=123 e /?page_id=123 */

@@ -40,14 +40,14 @@ jobs:
 
       # Throwaway data folder: the site's settings without the production address, analytics
       # and indexing, a one-off admin account (random password, discarded), the blog posts from
-      # Strapi and the site pages from site/extensions/site-ht/conteudo/
+      # Strapi and the site pages from site/themes/ht/content/
       - name: Montar o site com o conteúdo do repositório
         run: |
           mkdir -p "$BLOG_DATA_DIR"
           php -r '$s = json_decode(file_get_contents("site/data/settings.json"), true); $s["url"] = ""; $s["head_code"] = ""; $s["seo_hide_site"] = true; unset($s["home_page"], $s["blog_page"]); file_put_contents(getenv("BLOG_DATA_DIR") . "/settings.json", json_encode($s));'
           php -r 'require "site/app/bootstrap.php"; Auth::create("apresentacao", "Apresentação", bin2hex(random_bytes(16)), "admin");'
           php site/extensions/strapi-import/cli.php dados/strapi-2026-10-29
-          php site/extensions/site-ht/instalar.php
+          php site/themes/ht/instalar.php
 
       - name: Copiar o site em HTML
         run: |

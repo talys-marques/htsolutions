@@ -160,6 +160,15 @@ final class Admin
         if ($author !== '' && Auth::find($author)) {
             $data['author'] = $author;
         }
+        // Modelo da página (Conteúdo do site): só o admin troca. Os campos com o mesmo nome continuam.
+        $name = input('template');
+        if ($type === 'page' && Auth::isAdmin() && isset($_POST['template']) && $name !== ($old['template'] ?? '')) {
+            $template = SiteContent::template($name);
+            $data['template'] = $template['name'] ?? '';
+            if ($template) {
+                $data['fields'] = Field::clean($template['fields'], $old['fields'] ?? []);
+            }
+        }
 
         if ($data['title'] === '') {
             self::editor(array_merge($old ?? Posts::blank($type), $data), 'Dê um título antes de salvar.');
@@ -213,7 +222,8 @@ final class Admin
         Auth::requireCanEdit($post);
         $restored = Posts::restoreRevision($id, input('revision'), !Auth::isAdmin());
         flash($restored ? 'success' : 'error', $restored ? 'Versão restaurada. A versão anterior continua nas revisões.' : 'Revisão não encontrada.');
-        redirect('/admin/posts/' . $id);
+        // Restaurada pelo formulário de Conteúdo do site: volta para ele.
+        redirect((input('from') === 'content' && SiteContent::forPost($post) ? '/admin/content/' : '/admin/posts/') . $id);
     }
 
     public static function preview(int $id): void
@@ -241,7 +251,111 @@ final class Admin
             'tags' => array_slice(array_column(Posts::terms('tags', false), 'name'), 0, 40),
             'revisions' => $post['id'] ? Posts::revisions($post['id']) : [],
             'authors' => Auth::users(),
+            'templates' => $isPage ? SiteContent::templates() : [],
         ]);
+    }
+
+    /* ================================================== Conteúdo do site */
+
+    /** Páginas com modelo (app/SiteContent.php) e os modelos que ainda não têm página. */
+    public static function content(): void
+    {
+        Auth::requireLogin();
+        $templates = SiteContent::templates();
+        $pages = SiteContent::pages();
+        $used = array_column(array_column($pages, 'template'), 'name');
+        admin_view('content', [
+            'title' => 'Conteúdo do site',
+            'active' => 'content',
+            'templates' => $templates,
+            'pages' => $pages,
+            'missing' => array_filter($templates, fn($t) => !$t['repeatable'] && !in_array($t['name'], $used, true)),
+            // Conteúdo inicial que veio com o tema (content/) e ainda não virou página.
+            'installable' => Auth::isAdmin() ? count(array_filter(SiteContent::contentFiles(), fn($f) => !$f['page'])) : 0,
+        ]);
+    }
+
+    /** Formulário dos campos de uma página. admin.js junta os campos num JSON (campo "fields"). */
+    public static function contentEdit(int $id): void
+    {
+        Auth::requireLogin();
+        $post = Posts::find($id);
+        $template = $post && $post['status'] !== 'trash' ? SiteContent::forPost($post) : null;
+        if (!$template) {
+            self::notFound();
+            return;
+        }
+        Auth::requireCanEdit($post);
+        // Endereço e situação aparecem nas páginas repetidas (marcas...) e nas que ainda não estão no ar;
+        // as fixas que já estão no ar só mudam disso pelo editor de páginas.
+        $structure = !$template['shared'] && ($template['repeatable'] || $post['status'] !== 'published');
+
+        if (is_post()) {
+            verify_csrf();
+            $values = json_decode(input_raw('fields'), true);
+            if (!is_array($values)) {
+                flash('error', 'Os campos não chegaram completos e nada foi salvo. Recarregue a página e tente de novo.');
+                redirect('/admin/content/' . $id);
+            }
+            $data = ['id' => $id, 'fields' => Field::clean($template['fields'], $values)];
+            if (!$template['shared']) {
+                $data['title'] = input('title') !== '' ? input('title') : $post['title'];
+                $data['seo_description'] = mb_substr(input('seo_description'), 0, 300);
+            }
+            if ($structure) {
+                if (input('slug') !== '') {
+                    $data['slug'] = input('slug');
+                }
+                $data['status'] = input('status') === 'published' ? 'published' : 'draft';
+            }
+            $saved = Posts::save($data);
+            flash('success', match (true) {
+                $template['shared'] => 'Salvo. As mudanças já aparecem em todas as páginas do site.',
+                $saved['status'] === 'published' => 'Salvo. As mudanças já estão no site.',
+                default => 'Salvo como rascunho: a página ainda não aparece no site.',
+            });
+            redirect('/admin/content/' . $id);
+        }
+
+        admin_view('content-edit', [
+            'title' => $template['repeatable'] ? $template['label'] . ': ' . $post['title'] : $template['label'],
+            'active' => 'content',
+            'post' => $post,
+            'item' => Posts::item($id),
+            'template' => $template,
+            'structure' => $structure,
+            'values' => Field::fill($template['fields'], $post['fields']),
+            'revisions' => array_slice(Posts::revisions($id), 0, 20),
+        ]);
+    }
+
+    /** Nova página de um modelo, em rascunho. Modelo que não se repete tem uma página só: abre a que existe. */
+    public static function contentNew(string $name): void
+    {
+        $user = Auth::requireLogin();
+        verify_csrf();
+        $template = SiteContent::template($name);
+        if (!$template) {
+            self::notFound();
+            return;
+        }
+        $post = $template['repeatable'] ? null : SiteContent::pageOf($name);
+        if (!$post) {
+            $post = SiteContent::create($template, $user['username']);
+            flash('success', $template['shared'] ? 'Preencha os campos e salve.' : 'Página criada em rascunho. Preencha os campos e escolha "Publicada" para ela aparecer no site.');
+        }
+        redirect('/admin/content/' . $post['id']);
+    }
+
+    /** Cria as páginas que faltam a partir do conteúdo inicial do tema (content/). */
+    public static function contentInstall(): void
+    {
+        $user = Auth::requireAdmin();
+        verify_csrf();
+        $log = SiteContent::install($user['username']);
+        $count = count($log['created']);
+        flash('success', $count ? ($count === 1 ? '1 página criada' : "$count páginas criadas") . ' com o conteúdo que veio com o tema.' : 'Nenhuma página nova: todas já existiam.');
+        redirect('/admin/content');
     }
 
     /* =============================================================== Mídia */
@@ -688,6 +802,123 @@ final class Admin
     }
 
     /* =============================================== Backup e ferramentas */
+
+    /* =============================================================== Temas */
+
+    /** Lista de temas. POST: enviar .zip, ativar, baixar .zip ou excluir. */
+    public static function themes(): void
+    {
+        Auth::requireAdmin();
+        if (is_post()) {
+            verify_csrf();
+            $slug = input('theme');
+            try {
+                switch (input('action')) {
+                    case 'upload':
+                        $result = Themes::install($_FILES['zip'] ?? null);
+                        $theme = $result['theme'];
+                        flash('success', ($result['updated']
+                                ? "Tema “{$theme['name']}” atualizado" . ($theme['version'] ? " para a versão {$theme['version']}." : '.')
+                                : "Tema “{$theme['name']}” instalado. Use Pré-visualizar para ver o site com ele antes de ativar.")
+                            . ($result['options'] ? ' As opções que vieram no .zip foram aplicadas.' : ''));
+                        break;
+                    case 'activate':
+                        $theme = Themes::activate($slug);
+                        unset($_SESSION['theme_preview']);
+                        flash('success', "Tema “{$theme['name']}” ativado. É ele que os visitantes veem agora.");
+                        break;
+                    case 'download':
+                        @set_time_limit(300);
+                        Backup::send(Themes::export($slug), $slug . '.zip'); // envia e encerra
+                    case 'delete':
+                        Themes::delete($slug);
+                        flash('success', 'Tema excluído.');
+                        break;
+                }
+            } catch (RuntimeException $e) {
+                flash('error', $e->getMessage());
+            }
+            redirect('/admin/themes');
+        }
+        admin_view('themes', [
+            'title' => 'Temas',
+            'active' => 'themes',
+            'themes' => Themes::all(),
+            'activeSlug' => Themes::activeSlug(),
+            'previewing' => Themes::previewing()['slug'] ?? null,
+        ]);
+    }
+
+    /**
+     * Pré-visualizar: o admin navega pelo site com outro tema, enquanto os visitantes
+     * continuam vendo o ativo. GET de propósito (abre em nova aba): só muda o que o próprio admin vê.
+     */
+    public static function themePreview(?string $slug): void
+    {
+        Auth::requireAdmin();
+        if ($slug === null || $slug === Themes::activeSlug()) {
+            unset($_SESSION['theme_preview']);
+            redirect($slug === null ? '/admin/themes' : '/');
+        }
+        if (!Themes::get($slug)) {
+            self::notFound();
+            return;
+        }
+        $_SESSION['theme_preview'] = $slug;
+        redirect('/');
+    }
+
+    /** Opções do tema (Temas → Personalizar), montadas a partir do theme.json dele. */
+    public static function themeOptions(string $slug): void
+    {
+        Auth::requireAdmin();
+        $theme = Themes::get($slug);
+        if (!$theme || !$theme['options']) {
+            self::notFound();
+            return;
+        }
+        if (is_post()) {
+            verify_csrf();
+            Themes::saveOptions($slug, Themes::input($theme, (array) ($_POST['options'] ?? [])));
+            flash('success', 'Opções salvas.' . ($slug === Themes::activeSlug() ? '' : ' Elas aparecem no site quando o tema for ativado.'));
+            redirect('/admin/themes/' . $slug);
+        }
+        admin_view('theme-options', [
+            'title' => $theme['name'],
+            'active' => 'themes',
+            'theme' => $theme,
+            'values' => Themes::options($slug),
+            'categories' => array_column(Posts::terms('categories'), 'name'),
+            'previewItem' => self::previewItem(),
+        ]);
+    }
+
+    /** Prévia ao vivo das opções do tema, sem salvar (mesmo esquema da prévia de Configurações). */
+    public static function themeFrame(string $slug): void
+    {
+        Auth::requireAdmin();
+        verify_csrf();
+        $theme = Themes::get($slug);
+        if (!$theme) {
+            self::notFound();
+            return;
+        }
+        Themes::force($slug, Themes::input($theme, (array) ($_POST['options'] ?? [])));
+        Settings::override([
+            // Prévia só para olhar: links desligados, sem a barra do painel e sem analytics.
+            'head_code' => '<style>a, input, button { pointer-events: none; } .admin-bar { display: none; }</style>',
+            'body_code' => '',
+        ]);
+        $item = get_param('page') === 'post' ? self::previewItem() : null;
+        $post = $item ? Posts::find($item['id']) : null;
+        if ($post) {
+            $_SERVER['REQUEST_URI'] = post_url($post);
+            Site::renderPost($post);
+            return;
+        }
+        $_SERVER['REQUEST_URI'] = url('/'); // para o menu marcar a página atual
+        Site::home();
+    }
 
     public static function tools(): void
     {

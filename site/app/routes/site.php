@@ -19,6 +19,13 @@ $router->get('/favicon.ico', fn() => Site::favicon());
 $router->get('/{file:(?:sitemap_index|wp-sitemap[\w-]*|[a-z_]+-sitemap\d*)\.xml}', fn() => redirect('/sitemap.xml', 301));
 // Versões menores das imagens (srcset), geradas na primeira visita. Veja Media::thumb().
 $router->get('/thumbs/{width:\d+}/{path:.+}', fn($p) => Media::thumb((int) $p['width'], $p['path']));
+// CSS, JS e imagens dos temas instalados (themes/{tema}/assets/). Veja Themes::serveAsset().
+$router->get('/themes/{theme:[a-z0-9-]+}/assets/{path:.+}', fn($p) => Themes::serveAsset($p['theme'], $p['path']));
+
+// Páginas novas do tema ativo (functions.php → 'routes'). Fora do painel: um tema com erro não trava o /admin.
+if (!str_starts_with($path, '/admin')) {
+    Themes::routes($router);
+}
 
 foreach (['category', 'tag', 'author'] as $kind) {
     $router->get("/$kind/{slug}", fn($p) => Site::archive($kind, $p['slug']));

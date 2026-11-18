@@ -41,6 +41,7 @@ final class Settings
             'home_featured' => true, // post mais recente em destaque
             'home_columns' => 3, // colunas das estruturas em grade (2 a 4)
             'home_intro' => true, // frase de apresentação no topo da página inicial
+            'theme' => 'default', // tema ativo (Painel → Temas): pasta em themes/ ou 'default' = theme/. Veja app/Themes.php
             // Painel → SEO (veja app/Seo.php)
             'seo_home_title' => '', // título da página inicial no Google; vazio = nome do blog + frase de apresentação
             'seo_separator' => '–', // entre o título da página e o nome do blog, um de Seo::SEPARATORS

@@ -9,6 +9,8 @@ $nav = [
     'Conteúdo' => [
         ['posts', '/admin/posts', 'Posts', true],
         ['pages', '/admin/posts?type=page', 'Páginas', true],
+        // Páginas com campos fixos para o time de negócio: só aparece se o tema tiver modelos (fields/).
+        ['content', '/admin/content', 'Conteúdo do site', (bool) SiteContent::templates()],
         ['media', '/admin/media', 'Mídia', true],
         // O autor só tem a parte de conteúdo do SEO (o resto é técnico).
         ['seo', '/admin/seo/terms', 'Categorias e tags', !$isAdmin],
@@ -16,6 +18,7 @@ $nav = [
     'Administração' => [
         ['users', '/admin/users', 'Usuários', $isAdmin],
         ['settings', '/admin/settings', 'Configurações', $isAdmin],
+        ['themes', '/admin/themes', 'Temas', $isAdmin],
         ['seo', '/admin/seo', 'SEO', $isAdmin],
         ['redirects', '/admin/redirects', 'Redirecionamentos', $isAdmin],
     ],

@@ -60,7 +60,8 @@ $link = function (array $params) use ($isPage, $status, $q) {
           <tr>
             <td class="col-title">
               <a href="<?= e(url('/admin/posts/' . $item['id'])) ?>"><?= e($item['title']) ?></a>
-              <div class="row-meta">/<?= e($item['slug']) ?>/<?php if ($role = Admin::pageRole($item)): ?> · <strong><?= e($role) ?></strong><?php endif ?></div>
+              <div class="row-meta">/<?= e($item['slug']) ?>/<?php if ($role = Admin::pageRole($item)): ?> · <strong><?= e($role) ?></strong><?php endif ?>
+                <?php if ($template = SiteContent::forPost($item)): ?> · <a href="<?= e(url('/admin/content/' . $item['id'])) ?>">Conteúdo do site: <?= e($template['label']) ?></a><?php endif ?></div>
             </td>
             <td><?= Admin::badge($item) ?></td>
             <?php if (!$isPage): ?><td class="hide-sm muted"><?= e(implode(', ', $item['categories'])) ?></td><?php endif ?>

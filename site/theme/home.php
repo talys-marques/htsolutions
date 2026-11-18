@@ -9,7 +9,10 @@
 $grid = 'post-grid cols-' . $columns;
 $showTitle = in_array($site['title_place'], ['home', 'both'], true);
 $showTagline = $site['home_intro'] && $site['tagline'];
+// Início do site (não a página dos posts), primeira página: lugar para blocos do tema.
+$isHome = !$blog && $pagination['page'] === 1;
 ?>
+<?php if ($isHome) slot('home-top', get_defined_vars()) ?>
 <div class="wrap">
   <?php if ($blog && $pagination['page'] === 1): ?>
     <section class="intro">
@@ -93,3 +96,4 @@ $showTagline = $site['home_intro'] && $site['tagline'];
   <?php endif ?>
   </div>
 </div>
+<?php if ($isHome) slot('home-bottom', get_defined_vars()) ?>

@@ -206,6 +206,10 @@ $sections = ['identidade' => 'Identidade', 'aparencia' => 'Aparência', 'estilo'
 
         <hr>
         <h3>Estrutura da lista de posts</h3>
+        <?php $activeTheme = Themes::get(Themes::activeSlug()); ?>
+        <?php if ($activeTheme && Themes::has('home', $activeTheme)): ?>
+          <p class="alert alert-warning">O tema ativo, <b><?= e($activeTheme['name']) ?></b>, tem tela inicial própria: é ela que aparece no início do blog (ajuste em <a href="<?= e(url('/admin/themes')) ?>">Temas</a>). A estrutura abaixo vale para as páginas seguintes da lista e para a página dos posts.</p>
+        <?php endif ?>
         <div class="layout-picker" role="radiogroup" aria-label="Estrutura da página inicial" data-layout-picker>
           <?php foreach ($layouts as $key => $layout): ?>
             <label class="choice">

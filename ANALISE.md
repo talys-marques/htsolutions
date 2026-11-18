@@ -86,7 +86,7 @@ O post que usava o endereço `blog` (case de Giruá) virou `/case-ht-solutions-g
 
 ## O que está feito
 
-- **11 páginas** do site como páginas do blog com campos fixos (`site/extensions/site-ht/`), mais a lista de posts em `/blog/`.
+- **11 páginas** do site como páginas do blog com campos fixos (tema `site/themes/ht/`, sobre o Conteúdo do site do blog-system), mais a lista de posts em `/blog/`.
 - **117 posts** importados do Strapi, com imagens e vídeos baixados (`site/public/uploads/strapi/`).
 - **Topo, rodapé, contatos, redes e parceiros** editáveis num formulário só ("Topo, rodapé e contatos").
 - **Formulários da Emarsys** como no site antigo, cada página com o seu.
@@ -101,5 +101,5 @@ O post que usava o endereço `blog` (case de Giruá) virou `/case-ht-solutions-g
 - **Termos de uso**: a página existe sem conteúdo no site antigo. Pedir o texto ou deixar fora.
 - **Política de privacidade**: cita a lei portuguesa de proteção de dados (Lei n.º 67/98), não a LGPD. Precisa de revisão do jurídico.
 - **Vídeos institucionais** (122 MB e 90 MB) continuam no Azure. Se o Azure for desligado, subir no YouTube e trocar o endereço no painel.
-- **Páginas novas** (landing pages de campanha) não entram pelo painel: cada página nova precisa de um modelo, feito por desenvolvedor.
+- **Páginas novas** (landing pages de campanha): o blog-system traz o modelo "Página de apresentação", que o negócio cria pelo painel (Conteúdo do site → + Página de apresentação). Ele já sai com o topo, o rodapé, a fonte e o azul da HT, mas as seções têm o desenho simples do blog-system; um CSS no tema deixaria igual às outras páginas. Páginas com estrutura própria continuam precisando de um modelo feito por desenvolvedor.
 - **Logo**: o arquivo do site antigo tem 171 px de largura; vale pedir a versão em SVG.

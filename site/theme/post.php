@@ -35,9 +35,11 @@ $shareText = rawurlencode($post['title']);
     <figure class="post-cover"><?= image_tag($post['cover'], '(max-width: 1000px) 100vw, 960px', ['alt' => $post['cover_alt'], 'fetchpriority' => 'high']) ?></figure>
   <?php endif ?>
 
+  <?php slot('post-before-content', get_defined_vars()) ?>
   <div class="prose narrow">
     <?= $post['content'] ?>
   </div>
+  <?php slot('post-after-content', get_defined_vars()) ?>
 
   <footer class="post-footer narrow">
     <?php if ($post['tags']): ?>
@@ -78,3 +80,5 @@ $shareText = rawurlencode($post['title']);
     <?php endif ?>
   </nav>
 <?php endif ?>
+
+<?php slot('post-bottom', get_defined_vars()) ?>
