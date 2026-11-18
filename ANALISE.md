@@ -97,7 +97,7 @@ O post que usava o endereço `blog` (case de Giruá) virou `/case-ht-solutions-g
 
 ## Decisões pendentes
 
-- **Hospedagem com PHP** (onde roda hoje o Express não serve).
+- **Hospedagem**: Hostinger com deploy pelo Git (branch `producao`, gerada da pasta `site/`); passo a passo no README. Falta contratar/confirmar o plano (SSH só nos planos maiores) e fazer o teste de deploy antes de trocar o DNS.
 - **Termos de uso**: a página existe sem conteúdo no site antigo. Pedir o texto ou deixar fora.
 - **Política de privacidade**: cita a lei portuguesa de proteção de dados (Lei n.º 67/98), não a LGPD. Precisa de revisão do jurídico.
 - **Vídeos institucionais** (122 MB e 90 MB) continuam no Azure. Se o Azure for desligado, subir no YouTube e trocar o endereço no painel.

@@ -1,0 +1,35 @@
+# Production site on Hostinger. Hostinger's Git deployment (hPanel > Advanced > Git) pulls the
+# "producao" branch into public_html on every update. This workflow keeps that branch equal to
+# the site/ folder of main, with site/ as the branch root: the blog-system's own .htaccess then
+# serves public/, and the rest of the repository (dados/, apresentacao/, .github/) never reaches
+# the server. Content edited in the panel lives only on the server (site/.gitignore).
+name: Publicar na Hostinger
+
+on:
+  push:
+    branches: [main]
+    paths: ['site/**', '.github/workflows/producao.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: producao
+  cancel-in-progress: false
+
+jobs:
+  producao:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      # subtree split is deterministic: the same history always gives the same commits, so the
+      # branch only moves forward and Hostinger can update it with a plain git pull.
+      - name: Atualizar a branch producao com a pasta site/
+        run: |
+          commit=$(git subtree split --prefix site)
+          git push origin "$commit:refs/heads/producao"
+          echo "producao: $commit" >> "$GITHUB_STEP_SUMMARY"

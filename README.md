@@ -27,9 +27,35 @@ php themes/ht/instalar.php
 
 Depois disso, o conteúdo das páginas é editado no painel, em **Conteúdo do site**. Os posts ficam em **Posts**.
 
-## No servidor definitivo
+## No ar (Hostinger)
 
-Apache com PHP 8.1+. A pasta `site/` inteira vai para o servidor (o `.htaccess` da raiz manda tudo para `site/public/`). As pastas `data/` e `public/uploads/` precisam de permissão de escrita. Depois, os mesmos passos de "Rodar no computador" e a cópia de `public/assets/db_943hf3.bin` (consulta de garantias) a partir do site antigo.
+O código vai pelo Git e o conteúdo fica só no servidor:
+
+| O quê | Caminho | Quando entra no ar |
+|---|---|---|
+| Código, visual, modelos das páginas, atualizações do blog-system | push na `main` → `.github/workflows/producao.yml` atualiza a branch `producao` (só a pasta `site/`, na raiz) → a Hostinger puxa a branch para o `public_html` | segundos depois do push |
+| Textos, imagens, menus, posts, configurações | painel `/admin` do próprio servidor (`data/` e `public/uploads/`, fora do Git por `site/.gitignore`) | na hora |
+
+Os deploys não apagam o conteúdo: `data/`, os uploads novos e a base de garantias são ignorados pelo Git, então sobrevivem a `git pull`, `git reset --hard` e `git clean -fd`.
+
+### Preparar a primeira vez
+
+1. **hPanel → Avançado → Git**: conectar com o GitHub, repositório `talys-marques/htsolutions`, branch **`producao`**, pasta de instalação em branco (`public_html`, que precisa estar vazia) e deploy automático ligado.
+2. **hPanel → PHP**: versão 8.3, com `mbstring`, `gd` e `fileinfo` (vêm ligadas).
+3. **Conteúdo**, pelo Gerenciador de Arquivos:
+   - `public_html/data/`: o conteúdo de `site/data/` do computador (posts, páginas, contas, configurações), sem `sessions/` e `cache/`.
+   - `public_html/public/uploads/`: as pastas de ano (`2026/`...) de `site/public/uploads/`, se houver. `site/` e `strapi/` já vêm pelo Git.
+   - `public_html/public/assets/db_943hf3.bin`: a base da consulta de garantias, do site antigo.
+   - Sem `site/data/` do computador, outro caminho é instalar do zero por SSH: criar a conta em `/admin` e rodar `php themes/ht/instalar.php` dentro do `public_html` (os posts do Strapi exigiriam subir `dados/` também).
+4. **Testar antes de trocar o DNS**: abrir pelo endereço temporário da Hostinger, conferir páginas, painel, um envio de imagem e um push de teste (a imagem enviada tem que continuar lá depois do deploy).
+5. **Domínio**: apontar o DNS de htsolutions.com.br para a Hostinger e ativar o SSL. Os endereços do site antigo já redirecionam (estão nos dados).
+
+### No dia a dia
+
+- **Negócio**: edita em `/admin`, entra no ar ao salvar. Backup: botão em Backup e ferramentas e os backups da própria Hostinger (o Git não guarda o conteúdo).
+- **Desenvolvimento**: muda o código, testa com `site/run.bat`, faz push na `main`. A Action atualiza a `producao` e a Hostinger publica. Para publicar sem push (ou de novo), Actions → **Publicar na Hostinger** → Run workflow.
+- **Comandos no servidor** (trocar senha com `tools/reset-password.php`, migrações de dados): precisam de SSH no plano da Hostinger.
+- **`site/themes/ht/settings.json`**: as configurações da HT aplicadas na primeira instalação (e no GitHub Pages). Depois, as configurações valem as do painel; mudar este arquivo não altera o site no ar.
 
 ## Na apresentação (GitHub Pages)
 

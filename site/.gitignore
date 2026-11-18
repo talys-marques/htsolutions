@@ -1,3 +1,18 @@
-# Dados (contas, posts, sessões) ficam fora do repositório: veja o .gitignore da raiz.
+# Conteúdo vivo do site: fica só no servidor (o painel grava aqui) e nunca vem do Git.
+# Ignorado também protege no deploy: um "git pull" ou "git clean -fd" não apaga estes arquivos.
+#   data/            contas, posts, páginas, configurações, versões, sessões
+#   public/uploads/  imagens enviadas pelo painel (AAAA/MM/); site/ e strapi/ são as da instalação
+/data/*
+!/data/.htaccess
+/public/uploads/*
+!/public/uploads/.htaccess
+!/public/uploads/site/
+!/public/uploads/strapi/
+/public/thumbs/
+
+# Base da consulta de garantias: tem nomes de clientes e o repositório é público.
+# Vai direto para o servidor (Gerenciador de Arquivos), uma vez.
+/public/assets/db_943hf3.bin
+
 .DS_Store
 Thumbs.db
